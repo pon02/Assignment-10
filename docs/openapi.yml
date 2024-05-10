@@ -1,0 +1,875 @@
+openapi: "3.1.0"
+info:
+  description: 配車管理アプリのAPI仕様書です。
+  title: Pick up taxi Management API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: fields
+    description: 配車管理ページに関する操作
+  - name: orders
+    description: 車両に関する操作
+  - name: staffs
+    description: 乗車スタッフに関する操作
+  - name: car-types
+    description: 車両種別に関する操作
+  - name: sections
+    description: スタッフ部署に関する操作
+
+paths:
+  /fields:
+    post:
+      tags:
+        - fields
+      summary: 配車管理ページの登録
+      description: 配車管理ページを新たに登録する
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/fields'
+              example:
+                fieldId: null(自動採番)
+                name: フラワーフェスティバル2024/5/2朝
+                dateOfUse: 2024-05-02
+                createdAt: null(自動作成日時取得)
+      responses:
+        '201':
+          $ref: '#/components/responses/201'
+        '400':
+          $ref: '#/components/responses/400'
+        '409':
+          $ref: '#/components/responses/409'
+        'default':
+          $ref: '#/components/responses/default'
+
+    get:
+      tags:
+        - fields
+      summary: 配車管理ページの取得
+      description: クエリパラメータで入力された条件に合致する配車管理ページを取得する。条件を入力しない場合は全ての配車管理ページを取得する。
+      parameters:
+        - name: name
+          in: query
+          description: 名称に入力した文字が含まれる配車管理が検索される
+          required: false
+          schema:
+          type: string
+          example: フラワーフェスティバル
+        - name: dateOfUse
+          in: query
+          description: 入力した使用日付が含まれる配車管理が検索される
+          required: false
+          schema:
+          type: string
+          format: date
+          example: 2024-05-02
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/fields'
+                  example:
+                    - fieldId: 1
+                      name: フラワーフェスティバル2024/5/2朝
+                      dateOfUse: 2024-05-02
+                      createdAt: 2024-05-02T09:00:00.000+00:00
+                      updatedAt: null
+                    - fieldId: 2
+                      name: フラワーフェスティバル2024/5/2夜
+                      dateOfUse: 2024-05-02
+                      createdAt: 2024-05-02T09:00:00.000+00:00
+                      updatedAt: null
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        'default':
+          $ref: '#/components/responses/default'
+
+  /fields/{fieldId}:
+    get:
+      tags:
+        - fields
+      summary: 指定したIDの配車管理ページの取得
+      description: 指定したIDの配車管理ページ情報を取得する
+      parameters:
+        - name: fieldId
+          in: path
+          description: 取得したい配車管理ページのID
+          required: true
+          schema:
+            type: int
+            format: int64
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/fields'
+                example:
+                  fieldId: 1
+                  name: フラワーフェスティバル2024/5/2朝2
+                  dateOfUse: 2024-05-02
+                  createdAt: 2024-05-02T09:00:00.000+00:00
+                  updatedAt: null
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        'default':
+          $ref: '#/components/responses/default'
+
+    patch:
+      tags:
+        - fields
+      summary: 配車管理ページの更新
+      description: 配車管理ページを更新する
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/fields'
+              example:
+                fieldId: 1
+                name: フラワーフェスティバル2024/5/2朝2
+                dateOfUse: 2024-05-02
+                updatedAt: null(自動作成日時取得)
+      responses:
+        '204':
+          description: NoContent
+          headers:
+            Location:
+              description: location url
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: 正常に更新されました
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        'default':
+          $ref: '#/components/responses/default'
+
+    delete:
+      tags:
+        - fields
+      summary: 配車管理ページの削除
+      description: 配車管理ページを削除する
+      parameters:
+        - name: fieldId
+          in: path
+          description: 削除したい配車管理ページのID
+          required: true
+          schema:
+            type: int
+            format: int64
+            example: 1
+      responses:
+        '204':
+          description: NoContent
+          headers:
+            Location:
+              description: location url
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: 正常に削除されました
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        'default':
+          $ref: '#/components/responses/default'
+
+  /fields/{fieldId}/orders:
+    post:
+      tags:
+        - orders
+      summary: 配車情報の登録
+      description: 配車情報を新たに登録する
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/orders'
+            example:
+                orderId: null(自動採番)
+                carTypeId: 1
+                orderStatusId: 1
+                createdAt: null(自動作成日時取得)
+                updatedAt: null
+      responses:
+        '201':
+          $ref: '#/components/responses/201'
+        '400':
+          $ref: '#/components/responses/400'
+        '409':
+          $ref: '#/components/responses/409'
+        'default':
+          $ref: '#/components/responses/default'
+
+    get:
+      tags:
+        - orders
+      summary: 配車情報の取得
+      description: 全ての配車情報を取得する。
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/orders'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/orders'
+                  example:
+                    - orderId: 1
+                      carTypeId: 1
+                      orderStatusId: 1
+                      createdAt: 2024-05-02T09:00:00.000+00:00
+                      updatedAt: null
+                    - orderId: 2
+                      carTypeId: 2
+                      orderStatusId: 1
+                      createdAt: 2024-05-02T09:00:00.000+00:00
+                      updatedAt: null
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        'default':
+          $ref: '#/components/responses/default'
+
+  /fields/{fieldId}/orders/{orderId}:
+    patch:
+      tags:
+        - orders
+      summary: 配車情報の更新
+      description: 配車情報を更新する
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/orders'
+              example:
+                orderId: 1
+                carTypeId: 1
+                orderStatusId: 2
+                updatedAt: null(自動作成日時取得)
+      responses:
+        '204':
+          $ref: '#/components/responses/204'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        'default':
+          $ref: '#/components/responses/default'
+
+    delete:
+      tags:
+        - orders
+      summary: 配車情報の削除
+      description: 配車情報を削除する
+      parameters:
+        - name: fieldId
+          in: path
+          description: 削除したい配車情報ID
+          required: true
+          schema:
+            type: int
+            format: int64
+            example: 1
+      responses:
+        '204':
+          $ref: '#/components/responses/204'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        'default':
+          $ref: '#/components/responses/default'
+
+  /fields/{fieldId}/staffs:
+    post:
+      tags:
+        - staffs
+      summary: 乗車スタッフの登録
+      description: 乗車スタッフを新たに登録する
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/staffs'
+              example:
+                staffId: null(自動採番)
+                sectionId: 1
+                staffStatusId: 1
+                createdAt: null(自動作成日時取得)
+                updatedAt: null
+      responses:
+        '201':
+          $ref: '#/components/responses/201'
+        '400':
+          $ref: '#/components/responses/400'
+        '409':
+          $ref: '#/components/responses/409'
+        'default':
+          $ref: '#/components/responses/default'
+
+    get:
+      tags:
+        - staffs
+      summary: 乗車スタッフの取得
+      description: 全ての乗車スタッフを取得する。
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/staffs'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/staffs'
+                  example:
+                    - staffId: 1
+                      sectionId: 1
+                      staffStatusId: 1
+                      createdAt: 2024-05-02T09:00:00.000+00:00
+                      updatedAt: null
+                    - staffId: 2
+                      sectionId: 2
+                      staffStatusId: 1
+                      createdAt: 2024-05-02T09:00:00.000+00:00
+                      updatedAt: null
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        'default':
+          $ref: '#/components/responses/default'
+
+  /fields/{fieldId}/staffs/{staffId}:
+    patch:
+      tags:
+        - staffs
+      summary: 乗車スタッフの更新
+      description: 乗車スタッフを更新する
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/staffs'
+              example:
+                staffId: 1
+                sectionId: 1
+                staffStatusId: 2
+                updatedAt: null(自動作成日時取得)
+      responses:
+        '204':
+          $ref: '#/components/responses/204'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        'default':
+          $ref: '#/components/responses/default'
+
+    delete:
+      tags:
+        - staffs
+      summary: 乗車スタッフの削除
+      description: 乗車スタッフを削除する
+      parameters:
+        - name: fieldId
+          in: path
+          description: 削除したい乗車スタッフID
+          required: true
+          schema:
+            type: int
+            format: int64
+            example: 1
+      responses:
+        '204':
+          $ref: '#/components/responses/204'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        'default':
+          $ref: '#/components/responses/default'
+
+  /car-types:
+    post:
+      tags:
+        - car-types
+      summary: 車両種別の登録
+      description: 車両種別を新たに登録する
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/car-types'
+              example:
+                carTypeId: null(自動採番)
+                carType: セダン4人乗り
+                capacity: 4
+      responses:
+        '201':
+          $ref: '#/components/responses/201'
+        '400':
+          $ref: '#/components/responses/400'
+        '409':
+          $ref: '#/components/responses/409'
+        'default':
+          $ref: '#/components/responses/default'
+
+    get:
+      tags:
+        - car-types
+      summary: 車両種別の取得
+      description: 全ての車両種別を取得する。
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/car-types'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/car-types'
+                  example:
+                    - carTypeId: 1
+                      carType: セダン4人乗り
+                      capacity: 4
+                    - carTypeId: 2
+                      carType: ハコバン7人乗り
+                      capacity: 7
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        'default':
+          $ref: '#/components/responses/default'
+
+  /car-types/{carTypeId}:
+    patch:
+      tags:
+        - car-types
+      summary: 車両種別の更新
+      description: 車両種別を更新する
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/car-types'
+              example:
+                carTypeId: 1
+                carType: セダン4人乗り
+                capacity: 4
+      responses:
+        '204':
+          $ref: '#/components/responses/204'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        'default':
+          $ref: '#/components/responses/default'
+
+    delete:
+      tags:
+        - car-types
+      summary: 車両種別の削除
+      description: 車両種別を削除する
+      parameters:
+        - name: carTypeId
+          in: path
+          description: 削除したい車両種別ID
+          required: true
+          schema:
+            type: int
+            format: int64
+            example: 1
+      responses:
+        '204':
+          $ref: '#/components/responses/204'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        'default':
+          $ref: '#/components/responses/default'
+
+  /sections:
+    post:
+      tags:
+        - sections
+      summary: スタッフ部署の登録
+      description: スタッフ部署を新たに登録する
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/sections'
+              example:
+                sectionId: null(自動採番)
+                sectionName: 大道具
+      responses:
+        '201':
+          $ref: '#/components/responses/201'
+        '400':
+          $ref: '#/components/responses/400'
+        '409':
+          $ref: '#/components/responses/409'
+        'default':
+          $ref: '#/components/responses/default'
+
+    get:
+      tags:
+        - sections
+      summary: スタッフ部署の取得
+      description: 全てのスタッフ部署を取得する。
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/sections'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/sections'
+                  example:
+                    - sectionId: 1
+                      sectionName: 大道具
+                    - sectionId: 2
+                      sectionName: 小道具
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        'default':
+          $ref: '#/components/responses/default'
+
+  /sections/{sectionId}:
+    patch:
+      tags:
+        - sections
+      summary: スタッフ部署の更新
+      description: スタッフ部署を更新する
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/sections'
+              example:
+                sectionId: 1
+                sectionName: 大道具
+      responses:
+        '204':
+          $ref: '#/components/responses/204'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        'default':
+          $ref: '#/components/responses/default'
+
+    delete:
+      tags:
+        - sections
+      summary: スタッフ部署の削除
+      description: スタッフ部署を削除する
+      parameters:
+        - name: sectionId
+          in: path
+          description: 削除したいスタッフ部署ID
+          required: true
+          schema:
+            type: int
+            format: int64
+            example: 1
+      responses:
+        '204':
+          $ref: '#/components/responses/204'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        'default':
+          $ref: '#/components/responses/default'
+
+
+components:
+  schemas:
+    fields:
+      required: true
+      type: object
+      properties:
+        fieldId:
+          type: integer
+          format: int64
+          readOnly: true
+        name:
+          type: string
+          nullable: false
+        date-of-use:
+          type: string
+          format: date
+          nullable: false
+        createdAt:
+          $ref: '#/components/schemas/time-stamp-model'
+
+    orders:
+      required: true
+      type: object
+      properties:
+        orderId:
+          type: integer
+          format: int64
+          readOnly: true
+        carTypeId:
+          type: integer
+          format: int64
+        orderStatusId:
+          type: integer
+          format: int64
+        createdAt:
+          $ref: '#/components/schemas/time-stamp-model'
+
+    staffs:
+      required: true
+      type: object
+      properties:
+        staffId:
+          type: integer
+          format: int64
+          readOnly: true
+        sectionId:
+          type: integer
+          format: int64
+        staffStatusId:
+          type: integer
+          format: int64
+        createdAt:
+          $ref: '#/components/schemas/time-stamp-model'
+
+    car-types:
+      required: true
+      type: object
+      properties:
+        carTypeId:
+          type: integer
+          format: int64
+          readOnly: true
+        carType:
+          type: string
+        capacity:
+          type: integer
+          format: int64
+
+    order-statuses:
+      required: true
+      type: object
+      properties:
+        orderStatusId:
+          type: integer
+          format: int64
+          readOnly: true
+        orderStatus:
+          type: string
+
+    staff-statuses:
+      required: true
+      type: object
+      properties:
+        staffStatusId:
+          type: integer
+          format: int64
+          readOnly: true
+        staffStatus:
+          type: string
+
+    sections:
+      required: true
+      type: object
+      properties:
+        sectionId:
+          type: integer
+          format: int64
+          readOnly: true
+        sectionName:
+          type: string
+
+    time-stamp-model:
+      required:
+        - createdAt
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+          example: 2024-05-02T09:00:00.000+00:00
+        updatedAt:
+          type: string
+          format: date-time
+          example: 2024-05-02T09:00:00.000+00:00
+          readOnly: true
+
+    ErrorModel:
+      description: Response Error Model.
+      required: true
+      type: object
+      properties:
+        status:
+          type: string
+        error:
+          type: string
+        path:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+
+  responses:
+    201:
+      description: "Created"
+      headers:
+        Location:
+          description: "location url"
+          schema:
+            type: string
+            format: uri
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: "正常に登録されました"
+    204:
+      description: "NoContent"
+      headers:
+        Location:
+          description: "location url"
+          schema:
+            type: string
+            format: uri
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: "正常に更新されました"
+
+    400:
+      description: "BadRequest"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            status: "400"
+            error: "BAD_REQUEST"
+            path: "指定したパス"
+            timestamp: "2024-05-02T09:00:00.000+00:00"
+
+    404:
+      description: "NotFound"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            status: "404"
+            error: "NOT_FOUND"
+            path: "指定したパス"
+            timestamp: "2024-05-02T09:00:00.000+00:00"
+    409:
+      description: "Conflict"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            status: "409"
+            error: "CONFLICT"
+            path: "指定したパス"
+            timestamp: "2024-05-02T09:00:00.000+00:00"
+
+    default:
+      description: "Unexpected error"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            status: "500"
+            error: "INTERNAL_SERVER_ERROR"
+            path: "指定したパス"
+            timestamp: "2024-05-02T09:00:00.000+00:00"

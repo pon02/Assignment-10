@@ -35,9 +35,6 @@ public class OrderStatus {
 
     @Override
     public String toString() {
-        return "OrderStatus{" +
-                "id=" + id +
-                ", orderStatus='" + orderStatus +
-                '}';
+        return String.format("OrderStatus{id=%d, orderStatus='%s'}", id, orderStatus);
     }
 }

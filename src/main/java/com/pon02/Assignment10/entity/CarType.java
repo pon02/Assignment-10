@@ -42,10 +42,6 @@ public class CarType {
 
     @Override
     public String toString() {
-        return "CarType{" +
-                "id=" + id +
-                ", carType='" + carType + '\'' +
-                ", capacity=" + capacity +
-                '}';
+        return String.format("CarType{id=%d, carType='%s', capacity=%d}", id, carType, capacity);
     }
 }

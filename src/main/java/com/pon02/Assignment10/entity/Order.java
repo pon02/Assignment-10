@@ -1,5 +1,6 @@
 package com.pon02.Assignment10.entity;
 
+import java.sql.Timestamp;
 import java.util.Objects;
 
 public class Order {
@@ -56,12 +57,6 @@ public class Order {
 
     @Override
     public String toString() {
-        return "Order{" +
-                "id=" + id +
-                ", carTypeId=" + carTypeId +
-                ", carStatusId=" + orderStatusId +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
+        return String.format("Order{id=%d, carTypeId=%d, orderStatusId=%d, createdAt=%s, updatedAt=%s}", id, carTypeId, orderStatusId, createdAt, updatedAt);
     }
 }

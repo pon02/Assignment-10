@@ -23,6 +23,6 @@ public class CarTypeController {
 
     @GetMapping("/car-types/{id}")
     public CarType getCarTypeById(@PathVariable int id) {
-        return carTypeService.findCarTypeById(id);
+        return carTypeService.CarTypeFindById(id);
     }
 }

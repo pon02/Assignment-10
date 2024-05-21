@@ -10,7 +10,7 @@ import java.util.Optional;
 @Mapper
 public interface CarTypeMapper {
     @Select("SELECT * FROM car_types")
-    List<CarType> CarTypeFindAll();
+    List<CarType> findAllCarTypes();
 
     @Select("SELECT * FROM car_types WHERE id = #{id}")
     Optional<CarType> CarTypeFindById(int id);

@@ -13,5 +13,5 @@ public interface CarTypeMapper {
     List<CarType> findAllCarTypes();
 
     @Select("SELECT * FROM car_types WHERE id = #{id}")
-    Optional<CarType> CarTypeFindById(int id);
+    Optional<CarType> carTypeFindById(int id);
 }

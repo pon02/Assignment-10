@@ -14,7 +14,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CarTypeServiceTest {
@@ -35,7 +35,7 @@ class CarTypeServiceTest {
         assertThat(actual).isEqualTo(List.of(
                 new CarType(1, "セダン4人", 4),
                 new CarType(2, "ハコバン7人", 7)));
-
+        verify(carTypeMapper, times(1)).findAllCarTypes();
     }
 
     @Test
@@ -44,6 +44,7 @@ class CarTypeServiceTest {
                 .when(carTypeMapper).CarTypeFindById(1);
         CarType actual = carTypeService.CarTypeFindById(1);
         assertThat(actual).isEqualTo(new CarType(1, "セダン4人", 4));
+        verify(carTypeMapper, times(1)).CarTypeFindById(1);
     }
 
     @Test
@@ -54,5 +55,6 @@ class CarTypeServiceTest {
                 .isInstanceOfSatisfying(CarTypeNotFoundException.class, e -> {
                     assertThat(e.getMessage()).isEqualTo("Car type not found for id: 100");
                 });
+        verify(carTypeMapper, times(1)).CarTypeFindById(100);
     }
 }

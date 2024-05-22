@@ -12,7 +12,7 @@ import java.util.List;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -34,5 +34,6 @@ class OrderServiceTest {
         assertThat(actual).isEqualTo(List.of(
                 new Order(1, 1, 2, LocalDateTime.of(2024,5,2,9,0,0), LocalDateTime.of(2024,5,2,9,5,0)),
                 new Order(2, 2, 1, LocalDateTime.of(2024,5,2,9,2,0), null)));
+        verify(orderMapper,times(1)).findAllOrders();
     }
 }

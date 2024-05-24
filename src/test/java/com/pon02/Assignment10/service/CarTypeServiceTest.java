@@ -41,20 +41,20 @@ class CarTypeServiceTest {
     @Test
     public void カータイプIDでカータイプを取得できる() {
         doReturn(Optional.of(new CarType(1, "セダン4人", 4)))
-                .when(carTypeMapper).carTypeFindById(1);
-        CarType actual = carTypeService.carTypeFindById(1);
+                .when(carTypeMapper).findCarTypeById(1);
+        CarType actual = carTypeService.findCarTypeById(1);
         assertThat(actual).isEqualTo(new CarType(1, "セダン4人", 4));
-        verify(carTypeMapper, times(1)).carTypeFindById(1);
+        verify(carTypeMapper, times(1)).findCarTypeById(1);
     }
 
     @Test
     public void カータイプIDが存在しない場合例外がスローされること() {
         doReturn(Optional.empty())
-                .when(carTypeMapper).carTypeFindById(100);
-        assertThatThrownBy(() -> carTypeService.carTypeFindById(100))
+                .when(carTypeMapper).findCarTypeById(100);
+        assertThatThrownBy(() -> carTypeService.findCarTypeById(100))
                 .isInstanceOfSatisfying(CarTypeNotFoundException.class, e -> {
                     assertThat(e.getMessage()).isEqualTo("Car type not found for id: 100");
                 });
-        verify(carTypeMapper, times(1)).carTypeFindById(100);
+        verify(carTypeMapper, times(1)).findCarTypeById(100);
     }
 }

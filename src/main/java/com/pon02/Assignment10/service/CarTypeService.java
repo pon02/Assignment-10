@@ -19,8 +19,8 @@ public class CarTypeService {
         return this.carTypeMapper.findAllCarTypes();
     }
 
-    public CarType CarTypeFindById(int id) {
-        return this.carTypeMapper.CarTypeFindById(id)
+    public CarType findCarTypeById(int id) {
+        return this.carTypeMapper.findCarTypeById(id)
                .orElseThrow(() -> new CarTypeNotFoundException("Car type not found for id: " + id));
     }
 }

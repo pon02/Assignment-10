@@ -14,6 +14,6 @@ public class OrderService {
     }
 
     public List<Order> findAllOrders()  {
-        return this.orderMapper.OrdersFindAll();
+        return this.orderMapper.findAllOrders();
     }
 }

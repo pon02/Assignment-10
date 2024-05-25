@@ -16,11 +16,11 @@ public class CarTypeService {
     }
 
     public List<CarType> findAllCarTypes() {
-        return this.carTypeMapper.CarTypeFindAll();
+        return this.carTypeMapper.findAllCarTypes();
     }
 
     public CarType findCarTypeById(int id) {
-        return this.carTypeMapper.CarTypeFindById(id)
+        return this.carTypeMapper.findCarTypeById(id)
                .orElseThrow(() -> new CarTypeNotFoundException("Car type not found for id: " + id));
     }
 }

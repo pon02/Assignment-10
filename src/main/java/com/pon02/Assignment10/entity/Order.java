@@ -1,16 +1,21 @@
 package com.pon02.Assignment10.entity;
 
+import org.springframework.cglib.core.Local;
+
 import java.sql.Timestamp;
+
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
 public class Order {
     private int id;
     private int carTypeId;
     private int orderStatusId;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    public Order(int id, int carTypeId, int carStatusId, Timestamp createdAt, Timestamp updatedAt) {
+    public Order(int id, int carTypeId, int carStatusId, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.carTypeId = carTypeId;
         this.orderStatusId = carStatusId;
@@ -30,11 +35,11 @@ public class Order {
         return orderStatusId;
     }
 
-    public Timestamp getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public Timestamp getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 

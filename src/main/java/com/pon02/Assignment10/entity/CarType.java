@@ -30,9 +30,7 @@ public class CarType {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CarType carType = (CarType) o;
-        return id == carType.id &&
-                capacity == carType.capacity &&
-                Objects.equals(carType, carType.carType);
+        return id == carType.id && capacity == carType.capacity && Objects.equals(this.carType, carType.carType);
     }
 
     @Override

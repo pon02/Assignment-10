@@ -22,16 +22,25 @@ class OrderMapperTest {
     OrderMapper orderMapper;
 
     @Test
-    @DataSet(value = "datasets/orders.yml")
+    @DataSet(value = "datasets/orders/orders.yml")
     @Transactional
     void 全てのオーダーが取得できること() {
         List<Order> orders = orderMapper.findAllOrders();
+        LocalDateTime c1 = LocalDateTime.of(2024, 5, 2, 9, 0, 0);
+        LocalDateTime c2 = LocalDateTime.of(2024, 5, 2, 9, 2, 0);
+        LocalDateTime u1 = LocalDateTime.of(2024, 5, 2, 9, 5, 0);
         assertThat(orders)
                 .hasSize(2)
                 .contains(
-                        new Order(1, 1, 2, LocalDateTime.of(2024,5,2,9,0,0), LocalDateTime.of(2024,5,2,9,5,0)),
-                        new Order(2, 2, 1, LocalDateTime.of(2024,5,2,9,2,0), null)
+                        new Order(1, 1,2, c1, u1),
+                        new Order(2, 2, 1, c2, null)
                 );
     }
 
+    @Test
+    @DataSet(value = "datasets/orders/order_empty.yml")
+    @Transactional
+    void オーダーがない時に空のリストが返されること() {
+        assertThat(orderMapper.findAllOrders()).isEmpty();
+    }
 }

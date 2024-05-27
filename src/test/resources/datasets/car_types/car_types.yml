@@ -1,0 +1,7 @@
+car_types:
+  - id: 1
+    car_type: セダン4人乗り
+    capacity: 4
+  - id: 2
+    car_type: ハコバン7人乗り
+    capacity: 7

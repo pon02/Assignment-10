@@ -21,6 +21,7 @@ public class OrderIntegrationTest {
     @Autowired
     MockMvc mockMvc;
 
+    //GETメソッドでオーダーを全件取得しステータスコード200が返されること
     @Test
     @DataSet(value = "datasets/orders/orders.yml")
     @Transactional
@@ -48,10 +49,11 @@ public class OrderIntegrationTest {
                 ));
     }
 
+    //GETメソッドでオーダーが存在しない場合、空のリストを取得しステータスコード200が返されること
     @Test
     @DataSet(value = "datasets/orders/order_empty.yml")
     @Transactional
-    void オーダーがない時に空のリストが返されること() throws Exception {
+    void オーダーが存在しない時に空のリストが返されること() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/orders"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("[]"));

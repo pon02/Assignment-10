@@ -27,6 +27,8 @@ public class CarTypeIntegrationTest {
     @Autowired
     MockMvc mockMvc;
 
+
+    //GETメソッドでカータイプを全件取得しステータスコード200が返されること
     @Test
     @DataSet(value = "datasets/car_types/car_types.yml")
     @Transactional
@@ -50,6 +52,17 @@ public class CarTypeIntegrationTest {
                 ));
     }
 
+    //GETメソッドでカータイプが存在しない場合、空のリストを取得しステータスコード200が返されること
+    @Test
+    @DataSet(value = "datasets/car_types/car_type_empty.yml")
+    @Transactional
+    void カータイプが存在しない時に空のリストが返されること() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/car-types"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("[]"));
+    }
+
+    //GETメソッドで指定したIDのカータイプを取得しステータスコード200が返されること
     @Test
     @DataSet(value = "datasets/car_types/car_types.yml")
     @Transactional
@@ -66,6 +79,7 @@ public class CarTypeIntegrationTest {
                 ));
     }
 
+    // GETメソッドで存在しないIDを指定した時に、例外がスローされステータスコード404とエラーメッセージが返されること
     @Test
     @DataSet(value = "datasets/car_types/car_types.yml")
     @Transactional

@@ -9,13 +9,13 @@ import java.time.ZonedDateTime;
 import java.util.Objects;
 
 public class Order {
-    private int id;
+    private Integer id;
     private int carTypeId;
     private int orderStatusId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public Order(int id, int carTypeId, int carStatusId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Order(Integer id, int carTypeId, int carStatusId, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.carTypeId = carTypeId;
         this.orderStatusId = carStatusId;
@@ -23,7 +23,15 @@ public class Order {
         this.updatedAt = updatedAt;
     }
 
-    public int getId() {
+    public Order(int carTypeId, int carStatusId) {
+        this.id = null;
+        this.carTypeId = carTypeId;
+        this.orderStatusId = carStatusId;
+        this.createdAt = null;
+        this.updatedAt = null;
+    }
+
+    public Integer getId() {
         return id;
     }
 

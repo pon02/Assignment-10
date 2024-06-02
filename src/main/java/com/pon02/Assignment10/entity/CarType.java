@@ -3,22 +3,29 @@ package com.pon02.Assignment10.entity;
 import java.util.Objects;
 
 public class CarType {
-    private int id;
-    private String carType;
+    private Integer id;
+    private String carTypeName;
     private int capacity;
 
-    public CarType(int id, String carType, int capacity) {
+    public CarType(Integer id, String carTypeName, int capacity) {
         this.id = id;
-        this.carType = carType;
+        this.carTypeName = carTypeName;
         this.capacity = capacity;
     }
 
-    public int getId() {
+    public CarType(String carTypeName, int capacity) {
+        this.id = null;
+        this.carTypeName = carTypeName;
+        this.capacity = capacity;
+    }
+
+
+    public Integer getId() {
         return id;
     }
 
-    public String getCarType() {
-        return carType;
+    public String getCarTypeName() {
+        return carTypeName;
     }
 
     public int getCapacity() {
@@ -30,16 +37,16 @@ public class CarType {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CarType carType = (CarType) o;
-        return id == carType.id && capacity == carType.capacity && Objects.equals(this.carType, carType.carType);
+        return id == carType.id && capacity == carType.capacity && Objects.equals(this.carTypeName, carType.carTypeName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, carType, capacity);
+        return Objects.hash(id, carTypeName, capacity);
     }
 
     @Override
     public String toString() {
-        return String.format("CarType{id=%d, carType='%s', capacity=%d}", id, carType, capacity);
+        return String.format("CarType{id=%d, carType='%s', capacity=%d}", id, carTypeName, capacity);
     }
 }

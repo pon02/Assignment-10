@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS car_types;
 
 CREATE TABLE car_types (
-  id int unsigned AUTO_INCREMENT,
+  id INTEGER unsigned AUTO_INCREMENT,
   car_type VARCHAR(100) NOT NULL,
   capacity int unsigned NOT NULL,
   PRIMARY KEY(id)

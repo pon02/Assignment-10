@@ -23,4 +23,10 @@ public class CarTypeService {
         return this.carTypeMapper.findCarTypeById(id)
                .orElseThrow(() -> new CarTypeNotFoundException("Car type not found for id: " + id));
     }
+
+    public CarType insertCarType(String carTypeName, int capacity) {
+        CarType carType = new CarType(carTypeName, capacity);
+        carTypeMapper.insertCarType(carType);
+        return carType;
+    }
 }

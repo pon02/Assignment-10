@@ -16,4 +16,10 @@ public class OrderService {
     public List<Order> findAllOrders()  {
         return this.orderMapper.findAllOrders();
     }
+
+    public Order insertOrder(int carTypeId, int orderStatusId) {
+        Order order = new Order(carTypeId, orderStatusId);
+        orderMapper.insertOrder(order);
+        return order;
+    }
 }

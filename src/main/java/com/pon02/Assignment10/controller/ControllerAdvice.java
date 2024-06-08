@@ -4,7 +4,6 @@ import com.pon02.Assignment10.exception.CarTypeNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @ControllerAdvice
-public class CarTypeControllerAdvice {
+public class PickUpTaxiControllerAdvice {
 
     @ExceptionHandler(value=CarTypeNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleCarTypeNotFoundException(CarTypeNotFoundException e, HttpServletRequest request){

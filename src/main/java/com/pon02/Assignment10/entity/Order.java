@@ -10,12 +10,12 @@ import java.util.Objects;
 
 public class Order {
     private Integer id;
-    private int carTypeId;
-    private int orderStatusId;
+    private Integer carTypeId;
+    private Integer orderStatusId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public Order(Integer id, int carTypeId, int carStatusId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Order(Integer id, Integer carTypeId, Integer carStatusId, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.carTypeId = carTypeId;
         this.orderStatusId = carStatusId;
@@ -23,7 +23,7 @@ public class Order {
         this.updatedAt = updatedAt;
     }
 
-    public Order(int carTypeId, int carStatusId) {
+    public Order(Integer carTypeId, Integer carStatusId) {
         this.id = null;
         this.carTypeId = carTypeId;
         this.orderStatusId = carStatusId;
@@ -35,11 +35,11 @@ public class Order {
         return id;
     }
 
-    public int getCarTypeId() {
+    public Integer getCarTypeId() {
         return carTypeId;
     }
 
-    public int getOrderStatusId() {
+    public Integer getOrderStatusId() {
         return orderStatusId;
     }
 

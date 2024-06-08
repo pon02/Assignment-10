@@ -5,15 +5,15 @@ import java.util.Objects;
 public class CarType {
     private Integer id;
     private String carTypeName;
-    private int capacity;
+    private Integer capacity;
 
-    public CarType(Integer id, String carTypeName, int capacity) {
+    public CarType(Integer id, String carTypeName, Integer capacity) {
         this.id = id;
         this.carTypeName = carTypeName;
         this.capacity = capacity;
     }
 
-    public CarType(String carTypeName, int capacity) {
+    public CarType(String carTypeName, Integer capacity) {
         this.id = null;
         this.carTypeName = carTypeName;
         this.capacity = capacity;
@@ -28,7 +28,7 @@ public class CarType {
         return carTypeName;
     }
 
-    public int getCapacity() {
+    public Integer getCapacity() {
         return capacity;
     }
 

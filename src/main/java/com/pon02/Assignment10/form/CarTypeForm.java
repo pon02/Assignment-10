@@ -1,16 +1,21 @@
 package com.pon02.Assignment10.form;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import com.pon02.Assignment10.validation.UniqueName;
+import jakarta.validation.constraints.*;
 
 public class CarTypeForm {
 
     @Size(max = 50, message = "50文字以内で入力してください")
     @NotBlank(message = "必須項目です")
+    @UniqueName(message = "この車種名はすでに登録されています")
     private String carTypeName;
-    private int capacity;
 
-    public CarTypeForm(String carType, int capacity) {
+    @Min(1)
+    @Max(999)
+    @NotNull(message = "必須項目です")
+    private Integer capacity;
+
+    public CarTypeForm(String carType, Integer capacity) {
         this.carTypeName = carType;
         this.capacity = capacity;
     }
@@ -19,7 +24,7 @@ public class CarTypeForm {
         return carTypeName;
     }
 
-    public int getCapacity() {
+    public Integer getCapacity() {
         return capacity;
     }
 }

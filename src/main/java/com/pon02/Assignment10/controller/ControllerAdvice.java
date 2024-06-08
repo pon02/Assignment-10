@@ -5,8 +5,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -14,9 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@ControllerAdvice
-public class PickUpTaxiControllerAdvice {
+@RestControllerAdvice
+public class ControllerAdvice {
 
+    //CarTypeNameが見つからない場合の例外処理
     @ExceptionHandler(value=CarTypeNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleCarTypeNotFoundException(CarTypeNotFoundException e, HttpServletRequest request){
         Map<String, String> body = Map.of(
@@ -28,6 +29,7 @@ public class PickUpTaxiControllerAdvice {
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
+    //バリデーションエラーの例外処理
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         List<Map<String, String>> errors = new ArrayList<>();
@@ -42,6 +44,7 @@ public class PickUpTaxiControllerAdvice {
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
+    //バリデーションエラーの例外処理で使用するエラーレスポンスのクラス
     public static final class ErrorResponse {
         private final HttpStatus status;
         private final String message;

@@ -39,12 +39,12 @@ public class CarTypeIntegrationTest {
                         [
                             {
                                 "id": 1,
-                                "carType": "セダン4人乗り",
+                                "carTypeName": "セダン4人乗り",
                                 "capacity": 4
                             },
                             {
                                 "id": 2,
-                                "carType": "ハコバン7人乗り",
+                                "carTypeName": "ハコバン7人乗り",
                                 "capacity": 7
                             }
                         ]
@@ -72,7 +72,7 @@ public class CarTypeIntegrationTest {
                 .andExpect(MockMvcResultMatchers.content().json("""
                         {
                             "id": 1,
-                            "carType": "セダン4人乗り",
+                            "carTypeName": "セダン4人乗り",
                             "capacity": 4
                         }
                         """

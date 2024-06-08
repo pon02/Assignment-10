@@ -20,4 +20,7 @@ public interface CarTypeMapper {
     @Insert("INSERT INTO car_types (car_type, capacity) VALUES (#{carTypeName}, #{capacity})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertCarType(CarType carType);
+
+    @Select("SELECT EXISTS(SELECT 1 FROM car_types WHERE car_type = #{carTypeName})")
+    boolean existsByName(String carTypeName);
 }

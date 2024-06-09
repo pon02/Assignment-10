@@ -15,18 +15,18 @@ public class Order {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public Order(Integer id, Integer carTypeId, Integer carStatusId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Order(Integer id, Integer carTypeId, Integer orderStatusId, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.carTypeId = carTypeId;
-        this.orderStatusId = carStatusId;
+        this.orderStatusId = orderStatusId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
-    public Order(Integer carTypeId, Integer carStatusId) {
+    public Order(Integer carTypeId, Integer orderStatusId) {
         this.id = null;
         this.carTypeId = carTypeId;
-        this.orderStatusId = carStatusId;
+        this.orderStatusId = 1;
         this.createdAt = null;
         this.updatedAt = null;
     }

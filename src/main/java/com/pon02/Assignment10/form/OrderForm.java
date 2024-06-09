@@ -16,7 +16,7 @@ public class OrderForm {
 
     public OrderForm(Integer carTypeId, Integer orderStatusId) {
         this.carTypeId = carTypeId;
-        this.orderStatusId = orderStatusId;
+        this.orderStatusId = 1;
     }
 
     public Integer getCarTypeId() {

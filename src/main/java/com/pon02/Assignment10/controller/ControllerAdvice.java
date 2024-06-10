@@ -43,30 +43,4 @@ public class ControllerAdvice {
                 new ErrorResponse(HttpStatus.BAD_REQUEST, "validation error", errors);
         return ResponseEntity.badRequest().body(errorResponse);
     }
-
-    //バリデーションエラーの例外処理で使用するエラーレスポンスのクラス
-    public static final class ErrorResponse {
-        private final HttpStatus status;
-        private final String message;
-        private final List<Map<String, String>> errors;
-
-        public ErrorResponse(HttpStatus status, String message, List<Map<String, String>> errors) {
-            this.status = status;
-            this.message = message;
-            this.errors = errors;
-        }
-
-        public HttpStatus getStatus() {
-            return status;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public List<Map<String, String>> getErrors() {
-            return errors;
-        }
-
-    }
 }

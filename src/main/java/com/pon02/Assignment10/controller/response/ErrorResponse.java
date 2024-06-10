@@ -1,4 +1,4 @@
-package com.pon02.Assignment10.controller;
+package com.pon02.Assignment10.controller.response;
 
 import org.springframework.http.HttpStatus;
 

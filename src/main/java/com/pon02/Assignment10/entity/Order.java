@@ -9,29 +9,37 @@ import java.time.ZonedDateTime;
 import java.util.Objects;
 
 public class Order {
-    private int id;
-    private int carTypeId;
-    private int orderStatusId;
+    private Integer id;
+    private Integer carTypeId;
+    private Integer orderStatusId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public Order(int id, int carTypeId, int carStatusId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Order(Integer id, Integer carTypeId, Integer orderStatusId, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.carTypeId = carTypeId;
-        this.orderStatusId = carStatusId;
+        this.orderStatusId = orderStatusId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
-    public int getId() {
+    public Order(Integer carTypeId, Integer orderStatusId) {
+        this.id = null;
+        this.carTypeId = carTypeId;
+        this.orderStatusId = 1;
+        this.createdAt = null;
+        this.updatedAt = null;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public int getCarTypeId() {
+    public Integer getCarTypeId() {
         return carTypeId;
     }
 
-    public int getOrderStatusId() {
+    public Integer getOrderStatusId() {
         return orderStatusId;
     }
 

@@ -1,11 +1,15 @@
 package com.pon02.Assignment10.controller;
 
+import com.pon02.Assignment10.controller.response.Response;
 import com.pon02.Assignment10.entity.CarType;
+import com.pon02.Assignment10.form.CarTypeForm;
 import com.pon02.Assignment10.service.CarTypeService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -24,5 +28,13 @@ public class CarTypeController {
     @GetMapping("/car-types/{id}")
     public CarType getCarTypeById(@PathVariable int id) {
         return carTypeService.findCarTypeById(id);
+    }
+
+    @PostMapping("/car-types")
+    public ResponseEntity<Response> insert(@RequestBody @Validated CarTypeForm carTypeForm, UriComponentsBuilder uriBuilder) {
+        CarType carType = carTypeService.insertCarType(carTypeForm.getCarTypeName(), carTypeForm.getCapacity());
+        URI location = uriBuilder.path("/car-types/{id}").buildAndExpand(carType.getId()).toUri();
+        Response body = new Response("CarType created");
+        return ResponseEntity.created(location).body(body);
     }
 }

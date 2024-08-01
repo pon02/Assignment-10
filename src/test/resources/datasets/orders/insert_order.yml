@@ -1,0 +1,10 @@
+orders:
+  - car_type_id: 1
+    order_status_id: 2
+    updated_at: 2024-05-02T09:05:00+09:00
+  - car_type_id: 2
+    order_status_id: 1
+    updated_at:
+  - car_type_id: 4
+    order_status_id: 1
+    updated_at:

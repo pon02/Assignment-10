@@ -5,12 +5,12 @@ import jakarta.validation.constraints.*;
 public class OrderForm {
 
     @Min(1)
-    @Max(999)
+    @Max(99)
     @NotNull(message = "必須項目です")
     private Integer carTypeId;
 
     @Min(1)
-    @Max(999)
+    @Max(4)
     @NotNull(message = "必須項目です")
     private Integer orderStatusId;
 

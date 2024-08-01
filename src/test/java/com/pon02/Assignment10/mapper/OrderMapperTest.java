@@ -11,8 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 
 @DBRider
 @MybatisTest
@@ -42,5 +44,19 @@ class OrderMapperTest {
     @Transactional
     void オーダーがない時に空のリストが返されること() {
         assertThat(orderMapper.findAllOrders()).isEmpty();
+    }
+
+    @Test
+    @DataSet(cleanBefore = true)
+    @Transactional
+    void オーダーが追加されること() {
+        Order order = new Order(1,1);
+        orderMapper.insertOrder(order);
+        List<Order> orders = orderMapper.findAllOrders();
+        assertThat(orders)
+                .hasSize(1)
+                .usingRecursiveComparison()
+                .ignoringFields("createdAt", "updatedAt")
+                .isEqualTo(List.of(order));
     }
 }

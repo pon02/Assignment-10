@@ -94,7 +94,7 @@ public class OrderIntegrationTest {
     @Test
     @DataSet(value = "datasets/orders/orders.yml")
     @Transactional
-    void オーダーを登録時にcarTypeIdがnullだった場合エラーメッセージが返されること() throws Exception {
+    void オーダーを登録時にcarTypeIdがが不正な値の場合400エラーが返されること() throws Exception {
         String response = mockMvc.perform(MockMvcRequestBuilders.post("/orders")
                         .contentType("application/json")
                         .content("""

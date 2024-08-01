@@ -132,7 +132,7 @@ public class CarTypeIntegrationTest {
     @Transactional
     @ParameterizedTest
     @MethodSource("provideStringsForValidation")
-    void 新規登録時carTypeNameが空文字または50文字以上または登録済みの車種名の場合400エラーが返されること(String str,String expectedMessage) throws Exception {
+    void 新規登録時carTypeNameが不正な値の場合400エラーが返されること(String str,String expectedMessage) throws Exception {
         String response = mockMvc.perform(MockMvcRequestBuilders.post("/car-types")
                         .contentType("application/json")
                         .content("""
@@ -168,7 +168,7 @@ public class CarTypeIntegrationTest {
     @Test
     @DataSet(value = "datasets/car_types/car_types.yml")
     @Transactional
-    void 新規登録時capacityがnullの場合400エラーが返されること() throws Exception {
+    void 新規登録時capacityが不正な値の場合400エラーが返されること() throws Exception {
         String response = mockMvc.perform(MockMvcRequestBuilders.post("/car-types")
                         .contentType("application/json")
                         .content("""

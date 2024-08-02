@@ -105,7 +105,7 @@ public class CarTypeIntegrationTest {
 
     // POSTメソッドで正しくリクエストした時に、カータイプが登録できステータスコード201とメッセージが返されること
     @Test
-    @DataSet(cleanBefore = true, cleanAfter = true, value = "datasets/car_types/car_types.yml")
+    @DataSet(value = "datasets/car_types/car_types.yml")
     @ExpectedDataSet(value = "datasets/car_types/insert_car_type.yml")
     @Transactional
     void カータイプが登録できること() throws Exception {

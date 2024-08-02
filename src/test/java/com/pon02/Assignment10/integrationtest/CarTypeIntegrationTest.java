@@ -130,7 +130,6 @@ public class CarTypeIntegrationTest {
     // POSTメソッドでリクエストのcarTypeNameが空文字や50文字を超える場合、または登録済みの車種名を入力された時に、
     // ステータスコード400とエラーメッセージが返されること
     @Transactional
-    @DataSet(cleanBefore = true, cleanAfter = true, value = "datasets/car_types/car_types.yml")
     @ParameterizedTest
     @MethodSource("provideStringsForValidation")
     void 新規登録時carTypeNameが不正な値の場合400エラーが返されること(String str,String expectedMessage) throws Exception {
@@ -161,7 +160,7 @@ public class CarTypeIntegrationTest {
         return Stream.of(
                 Arguments.of("", "必須項目です"),
                 Arguments.of("123456789012345678901234567890123456789012345678901", "50文字以内で入力してください"),
-                Arguments.of("セダン4人乗り", "この車種名はすでに登録されています")
+                Arguments.of("セダン4人", "この車種名はすでに登録されています")
         );
     }
 

@@ -1,7 +1,7 @@
 car_types:
-  - car_type: セダン4人乗り
+  - car_type: セダン4人
     capacity: 4
-  - car_type: ハコバン7人乗り
+  - car_type: ハコバン7人
     capacity: 7
-  - car_type: ハイエース9人乗り
+  - car_type: ハイエース9人
     capacity: 9

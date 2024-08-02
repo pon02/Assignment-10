@@ -131,6 +131,7 @@ public class CarTypeIntegrationTest {
     // ステータスコード400とエラーメッセージが返されること
     @ParameterizedTest
     @MethodSource("provideStringsForValidation")
+    @DataSet(value = "datasets/car_types/car_types.yml")
     @Transactional
     void 新規登録時carTypeNameが不正な値の場合400エラーが返されること(String str,String expectedMessage) throws Exception {
         String response = mockMvc.perform(MockMvcRequestBuilders.post("/car-types")

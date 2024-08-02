@@ -44,12 +44,12 @@ public class CarTypeIntegrationTest {
                         [
                             {
                                 "id": 1,
-                                "carTypeName": "セダン4人乗り",
+                                "carTypeName": "セダン4人",
                                 "capacity": 4
                             },
                             {
                                 "id": 2,
-                                "carTypeName": "ハコバン7人乗り",
+                                "carTypeName": "ハコバン7人",
                                 "capacity": 7
                             }
                         ]
@@ -77,7 +77,7 @@ public class CarTypeIntegrationTest {
                 .andExpect(MockMvcResultMatchers.content().json("""
                         {
                             "id": 1,
-                            "carTypeName": "セダン4人乗り",
+                            "carTypeName": "セダン4人",
                             "capacity": 4
                         }
                         """
@@ -113,7 +113,7 @@ public class CarTypeIntegrationTest {
                         .contentType("application/json")
                         .content("""
                                 {
-                                    "carTypeName": "ハイエース9人乗り",
+                                    "carTypeName": "ハイエース9人",
                                     "capacity": 9
                                 }
                                 """))
@@ -129,9 +129,9 @@ public class CarTypeIntegrationTest {
 
     // POSTメソッドでリクエストのcarTypeNameが空文字や50文字を超える場合、または登録済みの車種名を入力された時に、
     // ステータスコード400とエラーメッセージが返されること
-    @Transactional
     @ParameterizedTest
     @MethodSource("provideStringsForValidation")
+    @Transactional
     void 新規登録時carTypeNameが不正な値の場合400エラーが返されること(String str,String expectedMessage) throws Exception {
         String response = mockMvc.perform(MockMvcRequestBuilders.post("/car-types")
                         .contentType("application/json")
@@ -173,7 +173,7 @@ public class CarTypeIntegrationTest {
                         .contentType("application/json")
                         .content("""
                                 {
-                                    "carTypeName": "ハイエース9人乗り",
+                                    "carTypeName": "ハイエース9人",
                                     "capacity": null
                                 }
                                 """))

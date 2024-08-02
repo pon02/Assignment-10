@@ -30,8 +30,8 @@ class CarTypeMapperTest {
         assertThat(carTypes)
                 .hasSize(2)
                 .contains(
-                        new CarType(1, "セダン4人乗り",4),
-                        new CarType(2, "ハコバン7人乗り",7)
+                        new CarType(1, "セダン4人",4),
+                        new CarType(2, "ハコバン7人",7)
                 );
     }
 
@@ -47,7 +47,7 @@ class CarTypeMapperTest {
     @Transactional
     void カータイプIDでカータイプが取得できること() {
         Optional<CarType> carType = carTypeMapper.findCarTypeById(1);
-        assertThat(carType).contains(new CarType(1, "セダン4人乗り",4));
+        assertThat(carType).contains(new CarType(1, "セダン4人",4));
     }
 
     @Test
@@ -62,7 +62,7 @@ class CarTypeMapperTest {
     @DataSet(cleanBefore = true)
     @Transactional
     void カータイプが追加されること() {
-        CarType carType = new CarType("セダン4人乗", 4);
+        CarType carType = new CarType("セダン4人", 4);
         carTypeMapper.insertCarType(carType);
         List<CarType> carTypes = carTypeMapper.findAllCarTypes();
         assertThat(carTypes)

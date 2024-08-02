@@ -57,4 +57,16 @@ class CarTypeMapperTest {
         Optional<CarType> carType = carTypeMapper.findCarTypeById(100);
         assertThat(carType).isEmpty();
     }
+
+    @Test
+    @DataSet(cleanBefore = true)
+    @Transactional
+    void カータイプが追加されること() {
+        CarType carType = new CarType("セダン4人乗", 4);
+        carTypeMapper.insertCarType(carType);
+        List<CarType> carTypes = carTypeMapper.findAllCarTypes();
+        assertThat(carTypes)
+                .hasSize(1)
+                .isEqualTo(List.of(carType));
+    }
 }

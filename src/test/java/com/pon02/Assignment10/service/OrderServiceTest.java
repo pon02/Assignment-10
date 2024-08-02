@@ -36,4 +36,13 @@ class OrderServiceTest {
                 new Order(2, 2, 1, LocalDateTime.of(2024,5,2,9,2,0), null)));
         verify(orderMapper,times(1)).findAllOrders();
     }
+
+    @Test
+    public void オーダーが正しく1件追加されること() {
+        Order order = new Order(1,1);
+        doNothing().when(orderMapper).insertOrder(order);
+        Order actual = orderService.insertOrder(1, 1);
+        assertThat(actual).isEqualTo(order);
+        verify(orderMapper, times(1)).insertOrder(order);
+    }
 }

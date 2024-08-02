@@ -1,8 +1,12 @@
 package com.pon02.Assignment10.integrationtest;
 
 import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.spring.api.DBRider;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.skyscreamer.jsonassert.Customization;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
@@ -17,6 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
+import java.util.stream.Stream;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -96,5 +101,96 @@ public class CarTypeIntegrationTest {
                 }
                 """, response, new CustomComparator(JSONCompareMode.STRICT,
                 new Customization("timestamp", ((o1, o2) -> true))));
+    }
+
+    // POSTメソッドで正しくリクエストした時に、カータイプが登録できステータスコード201とメッセージが返されること
+    @Test
+    @DataSet(cleanBefore = true, cleanAfter = true, value = "datasets/car_types/car_types.yml")
+    @ExpectedDataSet(value = "datasets/car_types/insert_car_type.yml")
+    @Transactional
+    void カータイプが登録できること() throws Exception {
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/car-types")
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                    "carTypeName": "ハイエース9人乗り",
+                                    "capacity": 9
+                                }
+                                """))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.header().exists("Location"))
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        JSONAssert.assertEquals("""
+                {
+                    "message": "CarType created"
+                }
+                """, response, true);
+    }
+
+    // POSTメソッドでリクエストのcarTypeNameが空文字や50文字を超える場合、または登録済みの車種名を入力された時に、
+    // ステータスコード400とエラーメッセージが返されること
+    @Transactional
+    @DataSet(cleanBefore = true, cleanAfter = true, value = "datasets/car_types/car_types.yml")
+    @ParameterizedTest
+    @MethodSource("provideStringsForValidation")
+    void 新規登録時carTypeNameが不正な値の場合400エラーが返されること(String str,String expectedMessage) throws Exception {
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/car-types")
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                    "carTypeName": "%s",
+                                    "capacity": 4
+                                }
+                                """.formatted(str)))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        JSONAssert.assertEquals("""
+                {
+                     "status": "BAD_REQUEST",
+                     "message": "validation error",
+                     "errors": [
+                         {
+                             "field": "carTypeName",
+                             "message": "%s"
+                         }
+                     ]
+                 }
+                """.formatted(expectedMessage), response, true);
+    }
+    private static Stream<Arguments> provideStringsForValidation() {
+        return Stream.of(
+                Arguments.of("", "必須項目です"),
+                Arguments.of("123456789012345678901234567890123456789012345678901", "50文字以内で入力してください"),
+                Arguments.of("セダン4人乗り", "この車種名はすでに登録されています")
+        );
+    }
+
+    // POSTメソッドでリクエストのcapacityがnullの場合に、ステータスコード400とエラーメッセージが返されること
+    @Test
+    @DataSet(value = "datasets/car_types/car_types.yml")
+    @Transactional
+    void 新規登録時capacityが不正な値の場合400エラーが返されること() throws Exception {
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/car-types")
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                    "carTypeName": "ハイエース9人乗り",
+                                    "capacity": null
+                                }
+                                """))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        JSONAssert.assertEquals("""
+                {
+                     "status": "BAD_REQUEST",
+                     "message": "validation error",
+                     "errors": [
+                         {
+                             "field": "capacity",
+                             "message": "必須項目です"
+                         }
+                     ]
+                 }
+                """, response, true);
     }
 }

@@ -1,8 +1,10 @@
 package com.pon02.Assignment10.integrationtest;
 
 import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.spring.api.DBRider;
 import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -11,6 +13,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.nio.charset.StandardCharsets;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -57,5 +63,59 @@ public class OrderIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/orders"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("[]"));
+    }
+
+    // POSTメソッドで正しくリクエストした時に、オーダーが登録できステータスコード201とメッセージが返されること
+    @Test
+    @DataSet(value = "datasets/orders/orders.yml")
+    @ExpectedDataSet(value = "datasets/orders/insert_order.yml")
+    @Transactional
+    void オーダーが登録できること() throws Exception {
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/orders")
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                    "carTypeId": 4,
+                                    "orderStatusId": 1
+                                }
+                                """))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(header().exists("Location"))
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        JSONAssert.assertEquals("""
+                {
+                    "message": "Order created"
+                }
+                """, response, true);
+    }
+
+    // POSTメソッドでリクエストのcarTypeIdがnullの時に、ステータスコード400とエラーメッセージが返されること
+    // （NotBlankのバリデーション確認,orderStatusIdは自動で1が入るようにしているため省略）
+    @Test
+    @DataSet(value = "datasets/orders/orders.yml")
+    @Transactional
+    void オーダーを登録時にcarTypeIdがが不正な値の場合400エラーが返されること() throws Exception {
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/orders")
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                    "carTypeId": null,
+                                    "orderStatusId": 1
+                                }
+                                """))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        JSONAssert.assertEquals("""
+                {
+                     "status": "BAD_REQUEST",
+                     "message": "validation error",
+                     "errors": [
+                         {
+                             "field": "carTypeId",
+                             "message": "必須項目です"
+                         }
+                     ]
+                 }
+                """, response, true);
     }
 }

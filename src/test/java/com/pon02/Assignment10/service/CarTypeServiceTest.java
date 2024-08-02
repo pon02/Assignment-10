@@ -57,4 +57,13 @@ class CarTypeServiceTest {
                 });
         verify(carTypeMapper, times(1)).findCarTypeById(100);
     }
+
+    @Test
+    public void カータイプが正しく1件追加されること() {
+        CarType carType = new CarType("セダン4人", 4);
+        doNothing().when(carTypeMapper).insertCarType(carType);
+        CarType actual = carTypeService.insertCarType("セダン4人", 4);
+        assertThat(actual).isEqualTo(carType);
+        verify(carTypeMapper, times(1)).insertCarType(carType);
+    }
 }

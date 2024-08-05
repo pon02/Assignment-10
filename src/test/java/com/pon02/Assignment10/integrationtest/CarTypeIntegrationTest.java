@@ -105,7 +105,7 @@ public class CarTypeIntegrationTest {
 
     // POSTメソッドで正しくリクエストした時に、カータイプが登録できステータスコード201とメッセージが返されること
     @Test
-    @DataSet(cleanBefore = true, cleanAfter = true, value = "datasets/car_types/car_types.yml")
+    @DataSet(value = "datasets/car_types/car_types.yml")
     @ExpectedDataSet(value = "datasets/car_types/insert_car_type.yml")
     @Transactional
     void カータイプが登録できること() throws Exception {
@@ -130,7 +130,7 @@ public class CarTypeIntegrationTest {
     // POSTメソッドでリクエストのcarTypeNameが空文字や50文字を超える場合、または登録済みの車種名を入力された時に、
     // ステータスコード400とエラーメッセージが返されること
     @Transactional
-    @DataSet(cleanBefore = true, cleanAfter = true, value = "datasets/car_types/car_types.yml")
+    @DataSet(value = "datasets/car_types/car_types.yml")
     @ParameterizedTest
     @MethodSource("provideStringsForValidation")
     void 新規登録時carTypeNameが不正な値の場合400エラーが返されること(String str,String expectedMessage) throws Exception {

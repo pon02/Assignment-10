@@ -2,6 +2,7 @@ package com.pon02.Assignment10.controller;
 
 import com.pon02.Assignment10.controller.response.ErrorResponse;
 import com.pon02.Assignment10.exception.CarTypeNotFoundException;
+import com.pon02.Assignment10.exception.OrderNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,18 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class ControllerAdvice {
+
+    //Orderが見つからない場合の例外処理
+    @ExceptionHandler(value= OrderNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleOrderNotFoundException(OrderNotFoundException e, HttpServletRequest request){
+        Map<String, String> body = Map.of(
+                "status", String.valueOf(HttpStatus.NOT_FOUND.value()),
+                "error", HttpStatus.NOT_FOUND.getReasonPhrase(),
+                "path", request.getRequestURI(),
+                "timestamp", ZonedDateTime.now().toString()
+        );
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
 
     //CarTypeNameが見つからない場合の例外処理
     @ExceptionHandler(value=CarTypeNotFoundException.class)

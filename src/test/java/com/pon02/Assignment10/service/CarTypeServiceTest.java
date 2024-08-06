@@ -60,9 +60,9 @@ class CarTypeServiceTest {
 
     @Test
     public void カータイプが正しく1件追加されること() {
-        CarType carType = new CarType("セダン4人", 4);
+        CarType carType = new CarType(null,"セダン4人乗り", 4);
         doNothing().when(carTypeMapper).insertCarType(carType);
-        CarType actual = carTypeService.insertCarType("セダン4人", 4);
+        CarType actual = carTypeService.insertCarType("セダン4人乗り", 4);
         assertThat(actual).isEqualTo(carType);
         verify(carTypeMapper, times(1)).insertCarType(carType);
     }

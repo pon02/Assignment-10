@@ -26,7 +26,7 @@ public class CarTypeController {
     }
 
     @GetMapping("/car-types/{id}")
-    public CarType getCarTypeById(@PathVariable int id) {
+    public CarType getCarTypeById(@PathVariable Integer id) {
         return carTypeService.findCarTypeById(id);
     }
 
@@ -36,5 +36,13 @@ public class CarTypeController {
         URI location = uriBuilder.path("/car-types/{id}").buildAndExpand(carType.getId()).toUri();
         Response body = new Response("CarType created");
         return ResponseEntity.created(location).body(body);
+    }
+
+    @PatchMapping("/car-types")
+    public ResponseEntity<Response> update(@RequestBody @Validated CarTypeForm carTypeForm, UriComponentsBuilder uriBuilder) {
+        CarType carType = carTypeService.updateCarType(carTypeForm.getId(), carTypeForm.getCarTypeName(), carTypeForm.getCapacity());
+        URI location = uriBuilder.path("/car-types/{id}").buildAndExpand(carType.getId()).toUri();
+        Response body = new Response("CarType updated");
+        return ResponseEntity.ok(body);
     }
 }

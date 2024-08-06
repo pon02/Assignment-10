@@ -23,13 +23,6 @@ public class Order {
         this.updatedAt = updatedAt;
     }
 
-    public Order(Integer carTypeId, Integer orderStatusId) {
-        this.id = null;
-        this.carTypeId = carTypeId;
-        this.orderStatusId = 1;
-        this.createdAt = null;
-        this.updatedAt = null;
-    }
 
     public Integer getId() {
         return id;

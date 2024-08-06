@@ -13,13 +13,6 @@ public class CarType {
         this.capacity = capacity;
     }
 
-    public CarType(String carTypeName, Integer capacity) {
-        this.id = null;
-        this.carTypeName = carTypeName;
-        this.capacity = capacity;
-    }
-
-
     public Integer getId() {
         return id;
     }

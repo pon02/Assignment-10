@@ -14,9 +14,9 @@ public class CarTypeForm {
     private Integer id;
 
     @Setter
-    @Size(max = 50, message = "50文字以内で入力してください")
+    @Size(max = 50, message = "50文字以内で入力してください", groups = {Create.class, Update.class})
     @NotBlank(message = "必須項目です", groups = {Create.class, Update.class})
-    @UniqueName(message = "この車種名はすでに登録されています")
+    @UniqueName(message = "この車種名はすでに登録されています", groups = {Create.class, Update.class})
     private String carTypeName;
 
     @Setter

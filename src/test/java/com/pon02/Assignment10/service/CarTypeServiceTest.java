@@ -2,6 +2,7 @@ package com.pon02.Assignment10.service;
 
 import com.pon02.Assignment10.entity.CarType;
 import com.pon02.Assignment10.exception.CarTypeNotFoundException;
+import com.pon02.Assignment10.form.CarTypeForm;
 import com.pon02.Assignment10.mapper.CarTypeMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -60,9 +61,10 @@ class CarTypeServiceTest {
 
     @Test
     public void カータイプが正しく1件追加されること() {
+        CarTypeForm carTypeForm = new CarTypeForm("セダン4人乗り", 4);
         CarType carType = new CarType(null,"セダン4人乗り", 4);
         doNothing().when(carTypeMapper).insertCarType(carType);
-        CarType actual = carTypeService.insertCarType("セダン4人乗り", 4);
+        CarType actual = carTypeService.insertCarType(carTypeForm);
         assertThat(actual).isEqualTo(carType);
         verify(carTypeMapper, times(1)).insertCarType(carType);
     }

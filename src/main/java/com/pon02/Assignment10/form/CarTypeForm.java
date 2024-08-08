@@ -8,18 +8,17 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
+@Setter
 public class CarTypeForm {
     @Min(1)
     @NotNull(message = "必須項目です", groups = {Update.class})
     private Integer id;
 
-    @Setter
     @Size(max = 50, message = "50文字以内で入力してください", groups = {Create.class, Update.class})
     @NotBlank(message = "必須項目です", groups = {Create.class, Update.class})
     @UniqueName(message = "この車種名はすでに登録されています", groups = {Create.class, Update.class})
     private String carTypeName;
 
-    @Setter
     @Min(1)
     @Max(99)
     @NotNull(message = "必須項目です", groups = {Create.class, Update.class})
@@ -30,8 +29,8 @@ public class CarTypeForm {
     }
 
     // POST 処理用のコンストラクタ
-    public CarTypeForm(String carType, Integer capacity) {
-        this.carTypeName = carType;
+    public CarTypeForm(String carTypeName, Integer capacity) {
+        this.carTypeName = carTypeName;
         this.capacity = capacity;
     }
 

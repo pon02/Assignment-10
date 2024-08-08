@@ -34,7 +34,7 @@ public class CarTypeController {
 
     @PostMapping("/car-types")
     public ResponseEntity<Response> insert(@RequestBody @Validated(Create.class) CarTypeForm carTypeForm, UriComponentsBuilder uriBuilder) {
-        CarType carType = carTypeService.insertCarType(carTypeForm.getCarTypeName(), carTypeForm.getCapacity());
+        CarType carType = carTypeService.insertCarType(carTypeForm);
         URI location = uriBuilder.path("/car-types/{id}").buildAndExpand(carType.getId()).toUri();
         Response body = new Response("CarType created");
         return ResponseEntity.created(location).body(body);
@@ -42,7 +42,7 @@ public class CarTypeController {
 
     @PatchMapping("/car-types")
     public ResponseEntity<Response> update(@RequestBody @Validated(Update.class) CarTypeForm carTypeForm, UriComponentsBuilder uriBuilder) {
-        CarType carType = carTypeService.updateCarType(carTypeForm.getId(), carTypeForm.getCarTypeName(), carTypeForm.getCapacity());
+        CarType carType = carTypeService.updateCarType(carTypeForm);
         URI location = uriBuilder.path("/car-types/{id}").buildAndExpand(carType.getId()).toUri();
         Response body = new Response("CarType updated");
         return ResponseEntity.ok(body);

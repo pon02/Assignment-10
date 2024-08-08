@@ -1,10 +1,15 @@
 package com.pon02.Assignment10.entity;
 
 import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
 public class CarType {
     private Integer id;
+    @Setter
     private String carTypeName;
+    @Setter
     private Integer capacity;
 
     public CarType(Integer id, String carTypeName, Integer capacity) {
@@ -13,17 +18,6 @@ public class CarType {
         this.capacity = capacity;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public String getCarTypeName() {
-        return carTypeName;
-    }
-
-    public Integer getCapacity() {
-        return capacity;
-    }
 
     @Override
     public boolean equals(Object o) {

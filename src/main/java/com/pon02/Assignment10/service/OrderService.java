@@ -2,6 +2,7 @@ package com.pon02.Assignment10.service;
 
 import com.pon02.Assignment10.entity.Order;
 import com.pon02.Assignment10.exception.OrderNotFoundException;
+import com.pon02.Assignment10.form.OrderForm;
 import com.pon02.Assignment10.mapper.OrderMapper;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +23,11 @@ public class OrderService {
         return this.orderMapper.findOrderById(id).orElseThrow(() -> new OrderNotFoundException("Order not found for id: " + id));
     }
 
-    public Order insertOrder(Integer carTypeId) {
+    public Order insertOrder(OrderForm orderForm) {
         Order order = new Order
             (  null,
-                carTypeId,
-                1,
+                orderForm.getCarTypeId(),
+                orderForm.getOrderStatusId(),
                 null,
                 null
             );
@@ -34,16 +35,10 @@ public class OrderService {
         return order;
     }
 
-    public Order updateOrder(Integer id, Integer orderStatusId) {
-        Order existingOrder = orderMapper.findOrderById(id).orElseThrow(() -> new OrderNotFoundException("Order not found for id: " + id));
-        Order updatedOrder = new Order(
-                            existingOrder.getId(),
-                            existingOrder.getCarTypeId(),
-                            orderStatusId,
-                            existingOrder.getCreatedAt(),
-                            existingOrder.getUpdatedAt()
-                            );
-            orderMapper.updateOrder(updatedOrder);
-        return updatedOrder;
+    public Order updateOrder(OrderForm orderForm) {
+        Order existingOrder = orderMapper.findOrderById(orderForm.getId()).orElseThrow(() -> new OrderNotFoundException("Order not found for id: " + orderForm.getId()));
+        existingOrder.setOrderStatusId(orderForm.getOrderStatusId());
+            orderMapper.updateOrder(existingOrder);
+        return existingOrder;
     }
 }

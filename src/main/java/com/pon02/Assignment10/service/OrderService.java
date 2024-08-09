@@ -23,22 +23,22 @@ public class OrderService {
         return this.orderMapper.findOrderById(id).orElseThrow(() -> new OrderNotFoundException("Order not found for id: " + id));
     }
 
-    public Order insertOrder(OrderForm orderForm) {
-        Order order = new Order
-            (  null,
-                orderForm.getCarTypeId(),
-                orderForm.getOrderStatusId(),
-                null,
-                null
-            );
+    public Order insertOrder(int carTypeId, int orderStatusId) {
+        Order order = new Order(null,carTypeId, orderStatusId,null,null);
         orderMapper.insertOrder(order);
         return order;
     }
 
-    public Order updateOrder(OrderForm orderForm) {
-        Order existingOrder = orderMapper.findOrderById(orderForm.getId()).orElseThrow(() -> new OrderNotFoundException("Order not found for id: " + orderForm.getId()));
-        existingOrder.setOrderStatusId(orderForm.getOrderStatusId());
-            orderMapper.updateOrder(existingOrder);
-        return existingOrder;
+    public Order updateOrder(Integer id, Integer orderStatusId) {
+        Order existingOrder = orderMapper.findOrderById(id).orElseThrow(() -> new OrderNotFoundException("Order not found for id: " + id));
+        Order updatedOrder = new Order(
+            existingOrder.getId(),
+            existingOrder.getCarTypeId(),
+            orderStatusId,
+            existingOrder.getCreatedAt(),
+            existingOrder.getUpdatedAt()
+        );
+        orderMapper.updateOrder(updatedOrder);
+        return updatedOrder;
     }
 }

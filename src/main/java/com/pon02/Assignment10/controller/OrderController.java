@@ -38,7 +38,7 @@ public class OrderController {
 
     @PostMapping("/orders")
     public ResponseEntity<Response> create(@RequestBody @Validated(Create.class) OrderForm orderForm, UriComponentsBuilder uriBuilder) {
-        Order order = orderService.insertOrder(orderForm);
+        Order order = orderService.insertOrder(orderForm.getCarTypeId(), orderForm.getOrderStatusId());
         URI location = uriBuilder.path("/orders/{id}").buildAndExpand(order.getId()).toUri();
         Response body = new Response("Order created");
         return ResponseEntity.created(location).body(body);
@@ -46,7 +46,7 @@ public class OrderController {
 
     @PatchMapping("/orders")
     public ResponseEntity<Response> update(@RequestBody @Validated(Update.class) OrderForm orderForm, UriComponentsBuilder uriBuilder) {
-        Order order = orderService.updateOrder(orderForm);
+        Order order = orderService.updateOrder(orderForm.getId(), orderForm.getOrderStatusId());
         URI location = uriBuilder.path("/orders/{id}").buildAndExpand(order.getId()).toUri();
         Response body = new Response("Order updated");
         return ResponseEntity.ok(body);

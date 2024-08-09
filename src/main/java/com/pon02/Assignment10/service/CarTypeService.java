@@ -25,21 +25,16 @@ public class CarTypeService {
                .orElseThrow(() -> new CarTypeNotFoundException("Car type not found for id: " + id));
     }
 
-    public CarType insertCarType(CarTypeForm carTypeForm) {
-        CarType carType = new CarType(
-            null,
-            carTypeForm.getCarTypeName(),
-            carTypeForm.getCapacity()
-        );
+    public CarType insertCarType(String carTypeName, int capacity) {
+        CarType carType = new CarType(null,carTypeName, capacity);
         carTypeMapper.insertCarType(carType);
         return carType;
     }
 
-    public CarType updateCarType(CarTypeForm carTypeForm) {
-        CarType existingCarType = carTypeMapper.findCarTypeById(carTypeForm.getId())
-                                  .orElseThrow(() -> new CarTypeNotFoundException("Car type not found for id: " + carTypeForm.getId()));
-        existingCarType.setCarTypeName(carTypeForm.getCarTypeName());
-        existingCarType.setCapacity(carTypeForm.getCapacity());
+    public CarType updateCarType(Integer id, String carTypeName, int capacity) {
+        CarType existingCarType = carTypeMapper.findCarTypeById(id)
+            .orElseThrow(() -> new CarTypeNotFoundException("Car type not found for id: " + id));
+        existingCarType = new CarType(id, carTypeName, capacity);
         carTypeMapper.updateCarType(existingCarType);
         return existingCarType;
     }

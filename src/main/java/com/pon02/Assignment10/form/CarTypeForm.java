@@ -23,20 +23,4 @@ public class CarTypeForm {
     @NotNull(message = "必須項目です", groups = {Create.class, Update.class})
     private Integer capacity;
 
-    // デフォルトコンストラクタ
-    public CarTypeForm() {
-    }
-
-    // POST 処理用のコンストラクタ
-    public CarTypeForm(String carTypeName, Integer capacity) {
-        this.carTypeName = carTypeName;
-        this.capacity = capacity;
-    }
-
-    // PATCH 処理用のコンストラクタ
-    public CarTypeForm(Integer id, String carType, Integer capacity) {
-        this.id = id;
-        this.carTypeName = carType;
-        this.capacity = capacity;
-    }
 }

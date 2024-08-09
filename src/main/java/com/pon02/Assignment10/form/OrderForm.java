@@ -21,19 +21,4 @@ public class OrderForm {
     @NotNull(message = "必須項目です", groups = {Update.class})
     private Integer orderStatusId = 1;
 
-    // デフォルトコンストラクタ
-    public OrderForm() {
-    }
-
-    // POST 処理用のコンストラクタ
-    public OrderForm(Integer carTypeId) {
-        this.carTypeId = carTypeId;
-        this.orderStatusId = 1;
-    }
-
-    // PATCH 処理用のコンストラクタ
-    public OrderForm(Integer id, Integer orderStatusId) {
-        this.id = id;
-        this.orderStatusId = orderStatusId;
-    }
 }

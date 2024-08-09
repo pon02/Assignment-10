@@ -61,10 +61,9 @@ class CarTypeServiceTest {
 
     @Test
     public void カータイプが正しく1件追加されること() {
-        CarTypeForm carTypeForm = new CarTypeForm("セダン4人乗り", 4);
-        CarType carType = new CarType(null,"セダン4人乗り", 4);
+        CarType carType = new CarType(null,"セダン4人", 4);
         doNothing().when(carTypeMapper).insertCarType(carType);
-        CarType actual = carTypeService.insertCarType(carTypeForm);
+        CarType actual = carTypeService.insertCarType("セダン4人", 4);
         assertThat(actual).isEqualTo(carType);
         verify(carTypeMapper, times(1)).insertCarType(carType);
     }

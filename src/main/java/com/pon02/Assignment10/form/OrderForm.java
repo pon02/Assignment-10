@@ -4,10 +4,8 @@ import com.pon02.Assignment10.validation.Create;
 import com.pon02.Assignment10.validation.Update;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 public class OrderForm {
     @Min(1)
     @NotNull(message = "必須項目です", groups = {Update.class})

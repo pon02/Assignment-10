@@ -1,29 +1,24 @@
 package com.pon02.Assignment10.form;
 
+import com.pon02.Assignment10.validation.Create;
+import com.pon02.Assignment10.validation.Update;
 import jakarta.validation.constraints.*;
+import lombok.Getter;
 
+@Getter
 public class OrderForm {
-
     @Min(1)
-    @Max(99)
-    @NotNull(message = "必須項目です")
+    @NotNull(message = "必須項目です", groups = {Update.class})
+    private Integer id;
+
+    @Min(value = 1, message = "1~99の値を入力してください", groups = {Create.class})
+    @Max(value = 99, message = "1~99の値を入力してください", groups = {Create.class})
+    @NotNull(message = "必須項目です", groups = {Create.class})
     private Integer carTypeId;
 
-    @Min(1)
-    @Max(4)
-    @NotNull(message = "必須項目です")
-    private Integer orderStatusId;
+    @Min(value = 1, message = "1~4の値を入力してください", groups = {Update.class})
+    @Max(value = 4, message = "1~4の値を入力してください", groups = {Update.class})
+    @NotNull(message = "必須項目です", groups = {Update.class})
+    private Integer orderStatusId = 1;
 
-    public OrderForm(Integer carTypeId, Integer orderStatusId) {
-        this.carTypeId = carTypeId;
-        this.orderStatusId = 1;
-    }
-
-    public Integer getCarTypeId() {
-        return carTypeId;
-    }
-
-    public Integer getOrderStatusId() {
-        return orderStatusId;
-    }
 }

@@ -50,7 +50,7 @@ class OrderMapperTest {
     @DataSet(cleanBefore = true)
     @Transactional
     void オーダーが追加されること() {
-        Order order = new Order(1,1);
+        Order order = new Order(null,1,1,null,null);
         orderMapper.insertOrder(order);
         List<Order> orders = orderMapper.findAllOrders();
         assertThat(orders)

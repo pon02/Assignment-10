@@ -1,16 +1,16 @@
 package com.pon02.Assignment10.entity;
 
-import org.springframework.cglib.core.Local;
-
-import java.sql.Timestamp;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.Objects;
 
+@Getter
 public class Order {
     private Integer id;
     private Integer carTypeId;
+    @Setter
     private Integer orderStatusId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -21,34 +21,6 @@ public class Order {
         this.orderStatusId = orderStatusId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-    }
-
-    public Order(Integer carTypeId, Integer orderStatusId) {
-        this.id = null;
-        this.carTypeId = carTypeId;
-        this.orderStatusId = 1;
-        this.createdAt = null;
-        this.updatedAt = null;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public Integer getCarTypeId() {
-        return carTypeId;
-    }
-
-    public Integer getOrderStatusId() {
-        return orderStatusId;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
     }
 
     @Override

@@ -59,10 +59,10 @@ class CarTypeMapperTest {
     }
 
     @Test
-    @DataSet(cleanBefore = true)
+    @DataSet(value = "datasets/car_types/car_type_empty.yml")
     @Transactional
     void カータイプが追加されること() {
-        CarType carType = new CarType("セダン4人乗", 4);
+        CarType carType = new CarType(null,"セダン4人乗り", 4);
         carTypeMapper.insertCarType(carType);
         List<CarType> carTypes = carTypeMapper.findAllCarTypes();
         assertThat(carTypes)

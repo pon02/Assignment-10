@@ -3,6 +3,7 @@ package com.pon02.Assignment10.mapper;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.spring.api.DBRider;
 import com.pon02.Assignment10.entity.Order;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,31 @@ class OrderMapperTest {
     @Transactional
     void オーダーがない時に空のリストが返されること() {
         assertThat(orderMapper.findAllOrders()).isEmpty();
+    }
+
+    @Test
+    @DataSet(value = "datasets/orders/orders.yml")
+    @Transactional
+    void オーダーIDでオーダーが取得できること() {
+        Optional<Order> order = orderMapper.findOrderById(1);
+        assertThat(order).contains(new Order(1, 1, 2, LocalDateTime.of(2024, 5, 2, 9, 0, 0),
+            LocalDateTime.of(2024, 5, 2, 9, 5, 0)));
+    }
+
+    @Test
+    @DataSet(value = "datasets/orders/order_empty.yml")
+    @Transactional
+    void 存在しないオーダーIDを指定した時に空で返すこと() {
+        Optional<Order> order = orderMapper.findOrderById(100);
+        assertThat(order).isEmpty();
+    }
+
+    @Test
+    @DataSet(value = "datasets/orders/orders.yml")
+    @Transactional
+    void オーダーIDでオーダーが存在するか確認できること() {
+        assertThat(orderMapper.existsById(1)).isTrue();
+        assertThat(orderMapper.existsById(100)).isFalse();
     }
 
     @Test

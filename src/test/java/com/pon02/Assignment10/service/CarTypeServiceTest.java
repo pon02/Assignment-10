@@ -2,7 +2,6 @@ package com.pon02.Assignment10.service;
 
 import com.pon02.Assignment10.entity.CarType;
 import com.pon02.Assignment10.exception.CarTypeNotFoundException;
-import com.pon02.Assignment10.form.CarTypeForm;
 import com.pon02.Assignment10.mapper.CarTypeMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

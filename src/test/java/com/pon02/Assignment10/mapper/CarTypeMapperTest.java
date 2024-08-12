@@ -59,6 +59,23 @@ class CarTypeMapperTest {
     }
 
     @Test
+    @DataSet(value = "datasets/car_types/car_types.yml")
+    @Transactional
+    void カータイプIDでカータイプが存在するかどうかが確認できること() {
+        assertThat(carTypeMapper.existsById(1)).isTrue();
+        assertThat(carTypeMapper.existsById(100)).isFalse();
+    }
+
+    @Test
+    @DataSet(value = "datasets/car_types/car_types.yml")
+    @Transactional
+    void カータイプネームがすでに存在するかどうかが確認できること() {
+        assertThat(carTypeMapper.existsByName("セダン4人乗り")).isTrue();
+        assertThat(carTypeMapper.existsByName("ハコバン7人乗り")).isTrue();
+        assertThat(carTypeMapper.existsByName("セダン4人")).isFalse();
+    }
+
+    @Test
     @DataSet(value = "datasets/car_types/car_type_empty.yml")
     @Transactional
     void カータイプが追加されること() {

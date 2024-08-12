@@ -1,6 +1,7 @@
 package com.pon02.Assignment10.service;
 
 import com.pon02.Assignment10.entity.Order;
+import com.pon02.Assignment10.exception.OrderNotFoundException;
 import com.pon02.Assignment10.form.OrderForm;
 import com.pon02.Assignment10.mapper.OrderMapper;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 
@@ -37,6 +39,28 @@ class OrderServiceTest {
                 new Order(1, 1, 2, LocalDateTime.of(2024,5,2,9,0,0), LocalDateTime.of(2024,5,2,9,5,0)),
                 new Order(2, 2, 1, LocalDateTime.of(2024,5,2,9,2,0), null)));
         verify(orderMapper,times(1)).findAllOrders();
+    }
+
+    @Test
+    public void オーダーIDでオーダーを取得できる() {
+        doReturn(Optional.of(new Order(1, 1, 2, LocalDateTime.of(2024, 5, 2, 9, 0, 0),
+            LocalDateTime.of(2024, 5, 2, 9, 5, 0))))
+            .when(orderMapper).findOrderById(1);
+        Order actual = orderService.findOrderById(1);
+        assertThat(actual).isEqualTo(new Order(1, 1, 2, LocalDateTime.of(2024, 5, 2, 9, 0, 0),
+            LocalDateTime.of(2024, 5, 2, 9, 5, 0)));
+        verify(orderMapper, times(1)).findOrderById(1);
+    }
+
+    @Test
+    public void オーダーIDが存在しない場合例外がスローされること() {
+        doReturn(Optional.empty())
+            .when(orderMapper).findOrderById(100);
+        assertThatThrownBy(() -> orderService.findOrderById(100))
+            .isInstanceOfSatisfying(OrderNotFoundException.class, e -> {
+                assertThat(e.getMessage()).isEqualTo("Order not found for id: 100");
+            });
+        verify(orderMapper, times(1)).findOrderById(100);
     }
 
     @Test

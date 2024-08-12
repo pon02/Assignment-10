@@ -8,7 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.skyscreamer.jsonassert.Customization;
 import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.skyscreamer.jsonassert.comparator.CustomComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -76,6 +79,25 @@ public class OrderIntegrationTest {
                         }
                         """
                 ));
+    }
+
+    //GETメソッドで存在しないIDを指定した場合、例外がスローされステータスコード404とエラーメッセージが返されること
+    @Test
+    @DataSet(value = "datasets/orders/orders.yml")
+    @Transactional
+    void 存在しないIDのオーダーを取得しようとした場合404エラーが返されること() throws Exception {
+        String response = mockMvc.perform(MockMvcRequestBuilders.get("/orders/100"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        JSONAssert.assertEquals("""
+                {
+                    "timestamp": "2024-05-28T18:05:52.214069+09:00[Asia/Tokyo]",
+                    "path": "/orders/100",
+                    "status": "404",
+                    "error": "Not Found"
+                }
+                """, response, new CustomComparator(JSONCompareMode.STRICT,
+            new Customization("timestamp", ((o1, o2) -> true))));
     }
 
     //GETメソッドでオーダーが存在しない場合、空のリストを取得しステータスコード200が返されること

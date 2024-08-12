@@ -67,4 +67,17 @@ class CarTypeServiceTest {
         assertThat(actual).isEqualTo(carType);
         verify(carTypeMapper, times(1)).insertCarType(carType);
     }
+
+    @Test
+    public void カータイプが正しく1件更新されること() {
+        CarType existingCarType = new CarType(1, "セダン4人", 4);
+        CarType updatedCarType = new CarType(1, "ハコバン7人", 7);
+        doReturn(Optional.of(existingCarType)).when(carTypeMapper).findCarTypeById(1);
+        doNothing().when(carTypeMapper).updateCarType(updatedCarType);
+        CarType actual = carTypeService.updateCarType(1, "ハコバン7人", 7);
+        assertThat(actual).isEqualTo(updatedCarType);
+
+        verify(carTypeMapper, times(1)).findCarTypeById(1);
+        verify(carTypeMapper, times(1)).updateCarType(updatedCarType);
+    }
 }

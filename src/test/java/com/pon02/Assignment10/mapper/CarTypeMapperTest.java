@@ -69,4 +69,24 @@ class CarTypeMapperTest {
                 .hasSize(1)
                 .isEqualTo(List.of(carType));
     }
+
+    @Test
+    @DataSet(value = "datasets/car_types/car_types.yml")
+    @Transactional
+    void カータイプが更新されること() {
+        CarType existingCarType = carTypeMapper.findCarTypeById(1).get();
+        CarType updatedCarType = new CarType(
+            existingCarType.getId(),
+            "セダン4人",
+            4
+        );
+        carTypeMapper.updateCarType(updatedCarType);
+        List<CarType> carTypes = carTypeMapper.findAllCarTypes();
+        assertThat(carTypes)
+                .hasSize(2)
+                .contains(
+                        updatedCarType,
+                        new CarType(2, "ハコバン7人乗り", 7)
+                );
+    }
 }

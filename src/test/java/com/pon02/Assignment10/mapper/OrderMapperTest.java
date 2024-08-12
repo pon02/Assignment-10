@@ -11,10 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 
 @DBRider
 @MybatisTest
@@ -47,10 +45,10 @@ class OrderMapperTest {
     }
 
     @Test
-    @DataSet(cleanBefore = true)
+    @DataSet(value = "datasets/orders/order_empty.yml")
     @Transactional
     void オーダーが追加されること() {
-        Order order = new Order(null,1,1,null,null);
+        Order order = new Order(null, 4, 1, null, null);
         orderMapper.insertOrder(order);
         List<Order> orders = orderMapper.findAllOrders();
         assertThat(orders)
@@ -58,5 +56,26 @@ class OrderMapperTest {
                 .usingRecursiveComparison()
                 .ignoringFields("createdAt", "updatedAt")
                 .isEqualTo(List.of(order));
+    }
+
+    @Test
+    @DataSet(value = "datasets/orders/orders.yml")
+    @Transactional
+    void オーダーが更新されること() {
+        Order existingOrder = orderMapper.findOrderById(2).get();
+        Order updatedOrder = new Order(
+            existingOrder.getId(),
+            existingOrder.getCarTypeId(),
+            2,
+            existingOrder.getCreatedAt(),
+            LocalDateTime.now().withNano(0)
+        );
+        orderMapper.updateOrder(updatedOrder);
+        List<Order> orders = orderMapper.findAllOrders();
+        assertThat(orders)
+                .hasSize(2)
+            .isEqualTo(List.of(
+                new Order(1, 1, 2, LocalDateTime.of(2024, 5, 2, 9, 0, 0), LocalDateTime.of(2024, 5, 2, 9, 5, 0)),
+                updatedOrder));
     }
 }

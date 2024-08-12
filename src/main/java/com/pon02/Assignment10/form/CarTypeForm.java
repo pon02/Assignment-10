@@ -1,9 +1,10 @@
 package com.pon02.Assignment10.form;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.pon02.Assignment10.validation.Create;
+import com.pon02.Assignment10.validation.existsId.CarTypeChecker;
+import com.pon02.Assignment10.validation.existsId.ExistsId;
+import com.pon02.Assignment10.validation.validationGroup.Create;
 import com.pon02.Assignment10.validation.UniqueName;
-import com.pon02.Assignment10.validation.Update;
+import com.pon02.Assignment10.validation.validationGroup.Update;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 
@@ -11,6 +12,7 @@ import lombok.Getter;
 public class CarTypeForm {
     @Min(1)
     @NotNull(message = "必須項目です", groups = {Update.class})
+    @ExistsId(checker = CarTypeChecker.class, groups = {Update.class})
     private Integer id;
 
     @Size(max = 50, message = "50文字以内で入力してください", groups = {Create.class, Update.class})

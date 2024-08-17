@@ -59,4 +59,17 @@ public class ControllerAdvice {
                 new ErrorResponse(HttpStatus.BAD_REQUEST, "validation error", errors);
         return ResponseEntity.badRequest().body(errorResponse);
     }
+
+    //DELETEリクエストの例外処理
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<Map<String, String>> handleIllegalStateException(IllegalStateException e, HttpServletRequest request){
+        Map<String, String> body = Map.of(
+                "status", String.valueOf(HttpStatus.BAD_REQUEST.value()),
+                "error", HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                "path", request.getRequestURI(),
+                "timestamp", ZonedDateTime.now().toString(),
+                "message", e.getMessage()
+        );
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
 }

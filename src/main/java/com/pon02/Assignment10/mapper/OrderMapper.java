@@ -23,6 +23,10 @@ public interface OrderMapper extends ExistChecker {
     @Select("SELECT EXISTS(SELECT 1 FROM orders WHERE id = #{id})")
     boolean existsById(Integer id);
 
+    @Select("SELECT EXISTS(SELECT 1 FROM orders WHERE car_type_id = #{carTypeId})")
+    boolean existsByCarTypeId(Integer carTypeId);
+
+
     @Insert("INSERT INTO orders (car_type_id, order_status_id) VALUES (#{carTypeId}, #{orderStatusId})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertOrder(Order order);

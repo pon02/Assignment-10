@@ -2,7 +2,6 @@ package com.pon02.Assignment10.service;
 
 import com.pon02.Assignment10.entity.CarType;
 import com.pon02.Assignment10.exception.CarTypeNotFoundException;
-import com.pon02.Assignment10.form.CarTypeForm;
 import com.pon02.Assignment10.mapper.CarTypeMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -66,5 +65,18 @@ class CarTypeServiceTest {
         CarType actual = carTypeService.insertCarType("セダン4人", 4);
         assertThat(actual).isEqualTo(carType);
         verify(carTypeMapper, times(1)).insertCarType(carType);
+    }
+
+    @Test
+    public void カータイプが正しく1件更新されること() {
+        CarType existingCarType = new CarType(1, "セダン4人", 4);
+        CarType updatedCarType = new CarType(1, "ハコバン7人", 7);
+        doReturn(Optional.of(existingCarType)).when(carTypeMapper).findCarTypeById(1);
+        doNothing().when(carTypeMapper).updateCarType(updatedCarType);
+        CarType actual = carTypeService.updateCarType(1, "ハコバン7人", 7);
+        assertThat(actual).isEqualTo(updatedCarType);
+
+        verify(carTypeMapper, times(1)).findCarTypeById(1);
+        verify(carTypeMapper, times(1)).updateCarType(updatedCarType);
     }
 }

@@ -59,6 +59,23 @@ class CarTypeMapperTest {
     }
 
     @Test
+    @DataSet(value = "datasets/car_types/car_types.yml")
+    @Transactional
+    void カータイプIDでカータイプが存在するかどうかが確認できること() {
+        assertThat(carTypeMapper.existsById(1)).isTrue();
+        assertThat(carTypeMapper.existsById(100)).isFalse();
+    }
+
+    @Test
+    @DataSet(value = "datasets/car_types/car_types.yml")
+    @Transactional
+    void カータイプネームがすでに存在するかどうかが確認できること() {
+        assertThat(carTypeMapper.existsByName("セダン4人乗り")).isTrue();
+        assertThat(carTypeMapper.existsByName("ハコバン7人乗り")).isTrue();
+        assertThat(carTypeMapper.existsByName("セダン4人")).isFalse();
+    }
+
+    @Test
     @DataSet(value = "datasets/car_types/car_type_empty.yml")
     @Transactional
     void カータイプが追加されること() {
@@ -68,5 +85,25 @@ class CarTypeMapperTest {
         assertThat(carTypes)
                 .hasSize(1)
                 .isEqualTo(List.of(carType));
+    }
+
+    @Test
+    @DataSet(value = "datasets/car_types/car_types.yml")
+    @Transactional
+    void カータイプが更新されること() {
+        CarType existingCarType = carTypeMapper.findCarTypeById(1).get();
+        CarType updatedCarType = new CarType(
+            existingCarType.getId(),
+            "セダン4人",
+            4
+        );
+        carTypeMapper.updateCarType(updatedCarType);
+        List<CarType> carTypes = carTypeMapper.findAllCarTypes();
+        assertThat(carTypes)
+                .hasSize(2)
+                .contains(
+                        updatedCarType,
+                        new CarType(2, "ハコバン7人乗り", 7)
+                );
     }
 }

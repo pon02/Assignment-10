@@ -1,6 +1,7 @@
 package com.pon02.Assignment10.mapper;
 
 import com.pon02.Assignment10.entity.CarType;
+import com.pon02.Assignment10.validation.existsId.ExistChecker;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
@@ -11,7 +12,7 @@ import java.util.Optional;
 import org.apache.ibatis.annotations.Update;
 
 @Mapper
-public interface CarTypeMapper {
+public interface CarTypeMapper extends ExistChecker {
     @Select("SELECT * FROM car_types")
     List<CarType> findAllCarTypes();
 
@@ -24,6 +25,9 @@ public interface CarTypeMapper {
 
     @Select("SELECT EXISTS(SELECT 1 FROM car_types WHERE car_type = #{carTypeName})")
     boolean existsByName(String carTypeName);
+
+    @Select("SELECT EXISTS(SELECT 1 FROM car_types WHERE id = #{id})")
+    boolean existsById(Integer id);
 
     @Update("UPDATE car_types " +
         "SET car_type = #{carTypeName}, " +

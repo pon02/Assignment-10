@@ -41,4 +41,9 @@ public class OrderService {
         orderMapper.updateOrder(updatedOrder);
         return updatedOrder;
     }
+
+    public void deleteOrder(Integer id) {
+        orderMapper.findOrderById(id).orElseThrow(() -> new OrderNotFoundException("Order not found for id: " + id));
+        orderMapper.deleteOrder(id);
+    }
 }

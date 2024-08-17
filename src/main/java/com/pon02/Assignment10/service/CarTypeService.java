@@ -38,4 +38,10 @@ public class CarTypeService {
         carTypeMapper.updateCarType(existingCarType);
         return existingCarType;
     }
+
+    public void deleteCarType(Integer id) {
+        carTypeMapper.findCarTypeById(id)
+            .orElseThrow(() -> new CarTypeNotFoundException("Car type not found for id: " + id));
+        carTypeMapper.deleteCarType(id);
+    }
 }

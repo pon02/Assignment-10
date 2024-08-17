@@ -47,4 +47,11 @@ public class CarTypeController {
         Response body = new Response("CarType updated");
         return ResponseEntity.ok(body);
     }
+
+    @DeleteMapping("/car-types/{id}")
+    public ResponseEntity<Response> delete(@PathVariable Integer id) {
+        carTypeService.deleteCarType(id);
+        Response body = new Response("CarType deleted");
+        return ResponseEntity.ok(body);
+    }
 }

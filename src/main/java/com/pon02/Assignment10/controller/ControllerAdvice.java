@@ -26,7 +26,8 @@ public class ControllerAdvice {
                 "status", String.valueOf(HttpStatus.NOT_FOUND.value()),
                 "error", HttpStatus.NOT_FOUND.getReasonPhrase(),
                 "path", request.getRequestURI(),
-                "timestamp", ZonedDateTime.now().toString()
+                "timestamp", ZonedDateTime.now().toString(),
+                "message", e.getMessage()
         );
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
@@ -38,7 +39,8 @@ public class ControllerAdvice {
                 "status", String.valueOf(HttpStatus.NOT_FOUND.value()),
                 "error", HttpStatus.NOT_FOUND.getReasonPhrase(),
                 "path", request.getRequestURI(),
-                "timestamp", ZonedDateTime.now().toString()
+                "timestamp", ZonedDateTime.now().toString(),
+                "message", e.getMessage()
         );
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }

@@ -3,6 +3,7 @@ package com.pon02.Assignment10.mapper;
 import com.pon02.Assignment10.entity.Order;
 import com.pon02.Assignment10.validation.existsId.ExistChecker;
 import java.util.Optional;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
@@ -31,4 +32,7 @@ public interface OrderMapper extends ExistChecker {
         "updated_at = CURRENT_TIMESTAMP " +
         "WHERE id = #{id}")
     void updateOrder(Order order);
+
+    @Delete("DELETE FROM orders WHERE id = #{id}")
+    void deleteOrder(Integer id);
 }

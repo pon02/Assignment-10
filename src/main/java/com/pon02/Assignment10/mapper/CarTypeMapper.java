@@ -2,6 +2,7 @@ package com.pon02.Assignment10.mapper;
 
 import com.pon02.Assignment10.entity.CarType;
 import com.pon02.Assignment10.validation.existsId.ExistChecker;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
@@ -34,4 +35,7 @@ public interface CarTypeMapper extends ExistChecker {
         "capacity = #{capacity} " +
         "WHERE id = #{id}")
     void updateCarType(CarType carType);
+
+    @Delete("DELETE FROM car_types WHERE id = #{id}")
+    void deleteCarType(Integer id);
 }

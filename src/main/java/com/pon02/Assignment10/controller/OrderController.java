@@ -8,6 +8,7 @@ import com.pon02.Assignment10.validation.validationGroup.Create;
 import com.pon02.Assignment10.validation.validationGroup.Update;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,6 +50,13 @@ public class OrderController {
         Order order = orderService.updateOrder(orderForm.getId(), orderForm.getOrderStatusId());
         URI location = uriBuilder.path("/orders/{id}").buildAndExpand(order.getId()).toUri();
         Response body = new Response("Order updated");
+        return ResponseEntity.ok(body);
+    }
+
+    @DeleteMapping("/orders/{id}")
+    public ResponseEntity<Response> delete(@PathVariable Integer id) {
+        orderService.deleteOrder(id);
+        Response body = new Response("Order deleted");
         return ResponseEntity.ok(body);
     }
 }

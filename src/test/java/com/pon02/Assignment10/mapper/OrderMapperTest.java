@@ -71,6 +71,14 @@ class OrderMapperTest {
     }
 
     @Test
+    @DataSet(value = "datasets/orders/orders.yml")
+    @Transactional
+    void カータイプIDでオーダーが存在するか確認できること() {
+        assertThat(orderMapper.existsByCarTypeId(1)).isTrue();
+        assertThat(orderMapper.existsByCarTypeId(100)).isFalse();
+    }
+
+    @Test
     @DataSet(value = "datasets/orders/order_empty.yml")
     @Transactional
     void オーダーが追加されること() {

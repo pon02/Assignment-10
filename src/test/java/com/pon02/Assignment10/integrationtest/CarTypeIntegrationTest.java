@@ -94,11 +94,12 @@ public class CarTypeIntegrationTest {
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
         JSONAssert.assertEquals("""
                 {
-                    "timestamp": "2024-05-28T18:05:52.214069+09:00[Asia/Tokyo]",
-                    "path": "/car-types/100",
-                    "status": "404",
-                    "error": "Not Found"
-                }
+                     "message": "Car type not found for id: 100",
+                     "error": "Not Found",
+                     "timestamp": "2024-08-17T16:28:02.663990+09:00[Asia/Tokyo]",
+                     "path": "/car-types/100",
+                     "status": "404"
+                 }
                 """, response, new CustomComparator(JSONCompareMode.STRICT,
                 new Customization("timestamp", ((o1, o2) -> true))));
     }

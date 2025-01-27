@@ -30,8 +30,8 @@ public class Staff {
     return id == staff.id &&
             sectionId == staff.sectionId &&
             staffStatusId == staff.staffStatusId &&
-            createdAt.equals(staff.createdAt) &&
-            updatedAt.equals(staff.updatedAt);
+            Objects.equals(createdAt, staff.createdAt) &&
+            Objects.equals(updatedAt, staff.updatedAt);
   }
 
   @Override

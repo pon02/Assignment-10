@@ -3,6 +3,7 @@ package com.pon02.Assignment10.mapper;
 import com.pon02.Assignment10.entity.Staff;
 import com.pon02.Assignment10.validation.existsId.ExistChecker;
 import java.util.List;
+import java.util.Optional;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -17,7 +18,7 @@ public interface StaffMapper extends ExistChecker {
   List<Staff> findAllStaffs();
 
   @Select("SELECT * FROM staffs WHERE id = #{id}")
-  Staff findStaffById(Integer id);
+  Optional<Staff> findStaffById(Integer id);
 
   @Select("SELECT EXISTS(SELECT 1 FROM staffs WHERE id = #{id})")
   boolean existsById(Integer id);

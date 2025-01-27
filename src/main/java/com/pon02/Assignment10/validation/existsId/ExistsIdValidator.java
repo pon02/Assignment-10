@@ -12,15 +12,17 @@ public class ExistsIdValidator implements ConstraintValidator<ExistsId, Integer>
   private final ExistChecker orderChecker;
   private final ExistChecker carTypeChecker;
   private final ExistChecker staffChecker;
+  private final ExistChecker sectionChecker;
 
   private Class<? extends ExistChecker> checkerClass;
 
   @Autowired
   public ExistsIdValidator(@Qualifier("orderChecker") ExistChecker orderChecker,
-      @Qualifier("carTypeChecker") ExistChecker carTypeChecker,@Qualifier("staffChecker") ExistChecker staffChecker) {
+      @Qualifier("carTypeChecker") ExistChecker carTypeChecker,@Qualifier("staffChecker") ExistChecker staffChecker,@Qualifier("sectionChecker") ExistChecker sectionChecker) {
     this.orderChecker = orderChecker;
     this.carTypeChecker = carTypeChecker;
     this.staffChecker = staffChecker;
+    this.sectionChecker = sectionChecker;
   }
 
   @Override
@@ -44,6 +46,8 @@ public class ExistsIdValidator implements ConstraintValidator<ExistsId, Integer>
       return carTypeChecker;
     } else if (checkerClass == StaffChecker.class) {
       return staffChecker;
+    } else if (checkerClass == SectionChecker.class) {
+      return sectionChecker;
     }
     throw new IllegalArgumentException("Unsupported checker class");
   }

@@ -2,6 +2,7 @@ package com.pon02.Assignment10.mapper;
 
 import com.pon02.Assignment10.entity.CarType;
 import com.pon02.Assignment10.validation.existsId.ExistChecker;
+import com.pon02.Assignment10.validation.uniqueName.UniqueNameChecker;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -13,7 +14,7 @@ import java.util.Optional;
 import org.apache.ibatis.annotations.Update;
 
 @Mapper
-public interface CarTypeMapper extends ExistChecker {
+public interface CarTypeMapper extends ExistChecker, UniqueNameChecker {
     @Select("SELECT * FROM car_types")
     List<CarType> findAllCarTypes();
 

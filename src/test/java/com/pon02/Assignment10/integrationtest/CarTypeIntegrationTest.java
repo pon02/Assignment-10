@@ -104,6 +104,45 @@ public class CarTypeIntegrationTest {
                 new Customization("timestamp", ((o1, o2) -> true))));
     }
 
+    // GETメソッドで指定したカータイプ名のカータイプを取得しステータスコード200が返されること
+    @Test
+    @DataSet(value = "datasets/car_types/car_types.yml")
+    @Transactional
+    void 指定したカータイプ名のカータイプが取得できること() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/car-types?name=セダン4人乗り"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("""
+                        [
+                            {
+                                "id": 1,
+                                "carTypeName": "セダン4人乗り",
+                                "capacity": 4
+                            }
+                        ]
+                        """
+                ));
+    }
+
+    // GETメソッドで存在しないカータイプ名を指定した時に、404エラーが返されること
+    @Test
+    @DataSet(value = "datasets/car_types/car_types.yml")
+    @Transactional
+    void 存在しないカータイプ名を指定した時に空のリストが返されること() throws Exception {
+        String response = mockMvc.perform(MockMvcRequestBuilders.get("/car-types?name=セダン10人乗り"))
+            .andExpect(MockMvcResultMatchers.status().isNotFound())
+            .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        JSONAssert.assertEquals("""
+                {
+                     "message": "Car type not found for name: セダン10人乗り",
+                     "error": "Not Found",
+                     "timestamp": "2024-08-17T16:28:02.663990+09:00[Asia/Tokyo]",
+                     "path": "/car-types?name=セダン10人乗り",
+                     "status": "404"
+                 }
+                """, response, new CustomComparator(JSONCompareMode.STRICT,
+                new Customization("timestamp", ((o1, o2) -> true))));
+    }
+
     // POSTメソッドで正しくリクエストした時に、カータイプが登録できステータスコード201とメッセージが返されること
     @Test
     @DataSet(value = "datasets/car_types/car_types.yml")

@@ -61,6 +61,24 @@ class CarTypeMapperTest {
     @Test
     @DataSet(value = "datasets/car_types/car_types.yml")
     @Transactional
+    void カータイプ名でカータイプが取得できること() {
+        List<CarType> carTypes = carTypeMapper.findCarTypeByName("セダン4人");
+        assertThat(carTypes)
+                .hasSize(1)
+                .contains(new CarType(1, "セダン4人乗り",4));
+    }
+
+    @Test
+    @DataSet(value = "datasets/car_types/car_types.yml")
+    @Transactional
+    void 存在しないカータイプ名を指定した時に空で返すこと() {
+        List<CarType> carTypes = carTypeMapper.findCarTypeByName("セダン10人");
+        assertThat(carTypes).isEmpty();
+    }
+
+    @Test
+    @DataSet(value = "datasets/car_types/car_types.yml")
+    @Transactional
     void カータイプIDでカータイプが存在するかどうかが確認できること() {
         assertThat(carTypeMapper.existsById(1)).isTrue();
         assertThat(carTypeMapper.existsById(100)).isFalse();

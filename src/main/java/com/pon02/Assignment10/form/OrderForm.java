@@ -1,6 +1,7 @@
 package com.pon02.Assignment10.form;
 
 import com.pon02.Assignment10.validation.existsId.CarTypeChecker;
+import com.pon02.Assignment10.validation.existsId.FieldChecker;
 import com.pon02.Assignment10.validation.validationGroup.Create;
 import com.pon02.Assignment10.validation.existsId.ExistsId;
 import com.pon02.Assignment10.validation.existsId.OrderChecker;
@@ -14,6 +15,12 @@ public class OrderForm {
     @NotNull(message = "必須項目です", groups = {Update.class})
     @ExistsId(checker = OrderChecker.class, groups = {Update.class})
     private Integer id;
+
+    @Min(value = 1, message = "1~9999の値を入力してください", groups = {Create.class})
+    @Max(value = 9999, message = "1~9999の値を入力してください", groups = {Create.class})
+    @NotNull(message = "必須項目です", groups = {Create.class})
+    @ExistsId(checker =FieldChecker.class, message = "フィールドIDが存在しません", groups = {Create.class})
+    private Integer fieldId;
 
     @Min(value = 1, message = "1~99の値を入力してください", groups = {Create.class})
     @Max(value = 99, message = "1~99の値を入力してください", groups = {Create.class})

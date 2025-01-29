@@ -38,7 +38,7 @@ public class FieldController {
     return fieldService.findFieldById(id);
   }
 
-  @GetMapping("/fields")
+  @GetMapping(value = "/fields", params = "name")
   public List<Field> getFieldByName(@RequestParam String fieldName) {
     return fieldService.findFieldByName(fieldName);
   }

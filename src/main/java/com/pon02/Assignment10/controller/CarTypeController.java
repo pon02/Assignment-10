@@ -32,6 +32,11 @@ public class CarTypeController {
         return carTypeService.findCarTypeById(id);
     }
 
+    @GetMapping("/car-types")
+    public List<CarType> getCarTypeByName(@RequestParam String carTypeName) {
+        return carTypeService.findCarTypeByName(carTypeName);
+    }
+
     @PostMapping("/car-types")
     public ResponseEntity<Response> insert(@RequestBody @Validated(Create.class) CarTypeForm carTypeForm, UriComponentsBuilder uriBuilder) {
         CarType carType = carTypeService.insertCarType(carTypeForm.getCarTypeName(), carTypeForm.getCapacity());

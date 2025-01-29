@@ -26,6 +26,14 @@ public class SectionService {
                 .orElseThrow(() -> new SectionNotFoundException("Section not found for id: " + id));
       }
 
+      public List<Section> findSectionByName(String sectionName) {
+          List<Section> sections = this.sectionMapper.findSectionByName(sectionName);
+          if (sections.isEmpty()) {
+              throw new SectionNotFoundException("Section not found for name: " + sectionName);
+          }
+          return sections;
+      }
+
       public Section insertSection(String sectionName) {
           Section section = new Section(null, sectionName);
           sectionMapper.insertSection(section);

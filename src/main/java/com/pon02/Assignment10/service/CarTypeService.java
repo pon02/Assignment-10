@@ -27,6 +27,14 @@ public class CarTypeService {
                .orElseThrow(() -> new CarTypeNotFoundException("Car type not found for id: " + id));
     }
 
+    public List<CarType> findCarTypeByName(String carTypeName) {
+        List<CarType> carTypes = this.carTypeMapper.findCarTypeByName(carTypeName);
+        if (carTypes.isEmpty()) {
+            throw new CarTypeNotFoundException("Car type not found for name: " + carTypeName);
+        }
+        return carTypes;
+    }
+
     public CarType insertCarType(String carTypeName, int capacity) {
         CarType carType = new CarType(null,carTypeName, capacity);
         carTypeMapper.insertCarType(carType);

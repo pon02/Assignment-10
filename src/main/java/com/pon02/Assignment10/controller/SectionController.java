@@ -37,6 +37,11 @@ public class SectionController {
         return sectionService.findSectionById(id);
     }
 
+    @GetMapping("/sections/{sectionName}")
+    public List<Section> getSectionByName(@PathVariable String sectionName) {
+        return sectionService.findSectionByName(sectionName);
+    }
+
     @PostMapping("/sections")
     public ResponseEntity<Response> insert(@RequestBody @Validated(Create.class) SectionForm sectionForm, UriComponentsBuilder uriBuilder) {
         Section section = sectionService.insertSection(sectionForm.getSectionName());

@@ -5,6 +5,7 @@ import com.pon02.Assignment10.exception.CarTypeNotFoundException;
 import com.pon02.Assignment10.exception.OrderNotFoundException;
 import com.pon02.Assignment10.exception.SectionNotFoundException;
 import com.pon02.Assignment10.exception.StaffNotFoundException;
+import com.pon02.Assignment10.exception.FieldNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,6 +64,19 @@ public class ControllerAdvice {
     //Sectionが見つからない場合の例外処理
     @ExceptionHandler(value= SectionNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleSectionNotFoundException(SectionNotFoundException e, HttpServletRequest request){
+        Map<String, String> body = Map.of(
+                "status", String.valueOf(HttpStatus.NOT_FOUND.value()),
+                "error", HttpStatus.NOT_FOUND.getReasonPhrase(),
+                "path", request.getRequestURI(),
+                "timestamp", ZonedDateTime.now().toString(),
+                "message", e.getMessage()
+        );
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+    //Fieldが見つからない場合の例外処理
+    @ExceptionHandler(value= FieldNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleFieldNotFoundException(FieldNotFoundException e, HttpServletRequest request){
         Map<String, String> body = Map.of(
                 "status", String.valueOf(HttpStatus.NOT_FOUND.value()),
                 "error", HttpStatus.NOT_FOUND.getReasonPhrase(),

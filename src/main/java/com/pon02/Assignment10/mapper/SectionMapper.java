@@ -2,6 +2,7 @@ package com.pon02.Assignment10.mapper;
 
 import com.pon02.Assignment10.entity.Section;
 import com.pon02.Assignment10.validation.existsId.ExistChecker;
+import com.pon02.Assignment10.validation.uniqueName.UniqueNameChecker;
 import java.util.List;
 import java.util.Optional;
 import org.apache.ibatis.annotations.Delete;
@@ -12,7 +13,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 @Mapper
-public interface SectionMapper extends ExistChecker {
+public interface SectionMapper extends ExistChecker, UniqueNameChecker {
     @Select("SELECT * FROM sections")
     List<Section> findAllSections();
 

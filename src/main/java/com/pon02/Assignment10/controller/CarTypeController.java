@@ -32,7 +32,7 @@ public class CarTypeController {
         return carTypeService.findCarTypeById(id);
     }
 
-    @GetMapping(value = "/car-types", params = "name")
+    @GetMapping(value = "/car-types", params = "carTypeName")
     public List<CarType> getCarTypeByName(@RequestParam String carTypeName) {
         return carTypeService.findCarTypeByName(carTypeName);
     }

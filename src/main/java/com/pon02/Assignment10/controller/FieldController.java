@@ -38,14 +38,14 @@ public class FieldController {
     return fieldService.findFieldById(id);
   }
 
-  @GetMapping(value = "/fields", params = "name")
+  @GetMapping(value = "/fields", params = "fieldName")
   public List<Field> getFieldByName(@RequestParam String fieldName) {
     return fieldService.findFieldByName(fieldName);
   }
 
   @PostMapping("/fields")
   public ResponseEntity<Response> insert(@RequestBody @Validated(Create.class) FieldForm fieldForm, UriComponentsBuilder uriBuilder) {
-    Field field = fieldService.insertField(fieldForm.getName(), fieldForm.getDateOfUse());
+    Field field = fieldService.insertField(fieldForm.getFieldName(), fieldForm.getDateOfUse());
     URI location = uriBuilder.path("/fields/{id}").buildAndExpand(field.getId()).toUri();
     Response body = new Response("Field created");
     return ResponseEntity.created(location).body(body);
@@ -53,7 +53,7 @@ public class FieldController {
 
   @PatchMapping("/fields")
   public ResponseEntity<Response> update(@RequestBody @Validated(Update.class) FieldForm fieldForm, UriComponentsBuilder uriBuilder) {
-    Field field = fieldService.updateField(fieldForm.getId(), fieldForm.getName(), fieldForm.getDateOfUse());
+    Field field = fieldService.updateField(fieldForm.getId(), fieldForm.getFieldName(), fieldForm.getDateOfUse());
     URI location = uriBuilder.path("/fields/{id}").buildAndExpand(field.getId()).toUri();
     Response body = new Response("Field updated");
     return ResponseEntity.ok(body);

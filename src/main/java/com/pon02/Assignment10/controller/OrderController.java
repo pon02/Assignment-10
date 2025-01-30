@@ -41,7 +41,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Response> create(@PathVariable Integer fieldId, @RequestBody @Validated(Create.class) OrderForm orderForm, UriComponentsBuilder uriBuilder) {
-        Order order = orderService.insertOrder(fieldId, orderForm.getCarTypeId(), orderForm.getOrderStatusId());
+        Order order = orderService.insertOrder(fieldId, orderForm.getCarTypeId());
         URI location = uriBuilder.path("/fields/{fieldId}/orders/{orderId}").buildAndExpand(fieldId, order.getId()).toUri();
         Response body = new Response("Order created");
         return ResponseEntity.created(location).body(body);

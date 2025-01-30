@@ -40,7 +40,7 @@ public class StaffController {
 
     @PostMapping
     public ResponseEntity<Response> create(@PathVariable Integer fieldId, @RequestBody @Validated(Create.class) StaffForm staffForm, UriComponentsBuilder uriBuilder) {
-        Staff staff = staffService.insertStaff(fieldId, staffForm.getSectionId(), staffForm.getStaffStatusId());
+        Staff staff = staffService.insertStaff(fieldId, staffForm.getSectionId());
         URI location = uriBuilder.path("/fields/{fieldId}/staffs/{staffId}").buildAndExpand(fieldId, staff.getId()).toUri();
         Response body = new Response("Staff created");
         return ResponseEntity.created(location).body(body);

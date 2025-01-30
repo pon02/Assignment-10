@@ -58,7 +58,7 @@ class OrderServiceTest {
             .when(orderMapper).findOrderById(1,100);
         assertThatThrownBy(() -> orderService.findOrderById(1,100))
             .isInstanceOfSatisfying(OrderNotFoundException.class, e -> {
-                assertThat(e.getMessage()).isEqualTo("Order not found for id: 100");
+                assertThat(e.getMessage()).isEqualTo("Order not found for fieldId: 1, orderId: 100");
             });
         verify(orderMapper, times(1)).findOrderById(1,100);
     }
@@ -67,7 +67,7 @@ class OrderServiceTest {
     public void オーダーが正しく1件追加されること() {
         Order order = new Order(null,1,1,1,null,null);
         doNothing().when(orderMapper).insertOrder(order);
-        Order actual = orderService.insertOrder(1,1, 1);
+        Order actual = orderService.insertOrder(1,1);
         assertThat(actual).isEqualTo(order);
         verify(orderMapper, times(1)).insertOrder(order);
     }

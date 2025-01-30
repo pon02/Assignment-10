@@ -28,13 +28,12 @@ public interface OrderMapper extends ExistChecker {
     boolean existsByCarTypeId(Integer carTypeId);
 
 
-    @Insert("INSERT INTO orders (field_id,car_type_id, order_status_id) VALUES (#{fieldId}, #{carTypeId}, #{orderStatusId})")
+    @Insert("INSERT INTO orders (field_id, car_type_id, order_status_id) VALUES (#{fieldId}, #{carTypeId}, #{orderStatusId})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertOrder(Order order);
 
     @Update("UPDATE orders " +
-        "SET field_id = #{fieldId}, " +
-        "order_status_id = #{orderStatusId}, " +
+        "SET order_status_id = #{order.orderStatusId}, " +
         "updated_at = CURRENT_TIMESTAMP " +
         "WHERE id = #{order.id} AND field_id = #{fieldId}")
     void updateOrder(@Param("order") Order order, @Param("fieldId") Integer fieldId);

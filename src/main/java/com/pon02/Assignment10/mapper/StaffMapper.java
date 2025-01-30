@@ -33,8 +33,7 @@ public interface StaffMapper extends ExistChecker {
   void insertStaff(Staff staff);
 
   @Update("UPDATE staffs " +
-      "SET field_id = #{fieldId}, " +
-      "staff_status_id = #{staffStatusId}, " +
+      "SET staff_status_id = #{staffStatusId}, " +
       "updated_at = CURRENT_TIMESTAMP " +
       "WHERE id = #{staff.id} AND field_id = #{fieldId}")
   void updateStaff(@Param("staff") Staff staff, @Param("fieldId") Integer fieldId);

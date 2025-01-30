@@ -5,6 +5,7 @@ import com.pon02.Assignment10.validation.existsId.ExistsId;
 import com.pon02.Assignment10.validation.existsId.FieldChecker;
 import com.pon02.Assignment10.validation.validationGroup.Create;
 import com.pon02.Assignment10.validation.validationGroup.Update;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -21,9 +22,10 @@ public class FieldForm {
 
   @Size(max = 50, message = "50文字以内で入力してください", groups = {Create.class, Update.class})
   @NotBlank(message = "必須項目です", groups = {Create.class, Update.class})
-  private String name;
+  private String fieldName;
 
-  @Size(max = 50, message = "50文字以内で入力してください", groups = {Create.class, Update.class})
-  @NotBlank(message = "必須項目です", groups = {Create.class, Update.class})
+  @NotNull(message = "必須項目です", groups = {Create.class, Update.class})
+  @Future(message = "未来の日付を入力してください", groups = {Create.class, Update.class})
+  @JsonFormat(pattern = "yyyy-MM-dd")
   private LocalDate dateOfUse;
 }

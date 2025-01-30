@@ -22,14 +22,14 @@ public class StaffService {
         return this.staffMapper.findStaffById(fieldId,staffId).orElseThrow(() -> new StaffNotFoundException("Staff not found for fieldId: " + fieldId + ", staffId: " + staffId));
     }
 
-    public Staff insertStaff(Integer fieldId, int sectionId, int staffStatusId) {
-        Staff staff = new Staff(null, fieldId, sectionId, staffStatusId,null,null);
+    public Staff insertStaff(Integer fieldId, int sectionId) {
+        Staff staff = new Staff(null, fieldId, sectionId, 1,null,null);
         staffMapper.insertStaff(staff);
         return staff;
     }
 
-    public Staff updateStaff(Integer id, Integer fieldId, Integer staffStatusId) {
-        Staff existingStaff = staffMapper.findStaffById(fieldId, id).orElseThrow(() -> new StaffNotFoundException("Staff not found for fieldId: " + fieldId + ", staffId: " + id));
+    public Staff updateStaff(Integer staffId, Integer fieldId, Integer staffStatusId) {
+        Staff existingStaff = staffMapper.findStaffById(fieldId, staffId).orElseThrow(() -> new StaffNotFoundException("Staff not found for fieldId: " + fieldId + ", staffId: " + staffId));
         Staff updatedStaff = new Staff(
             existingStaff.getId(),
             existingStaff.getFieldId(),

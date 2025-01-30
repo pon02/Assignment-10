@@ -25,15 +25,15 @@ public interface FieldMapper{
   @Select("SELECT EXISTS(SELECT 1 FROM fields WHERE id = #{id})")
   boolean existsById(Integer id);
 
-  @Select("SELECT EXISTS(SELECT 1 FROM fields WHERE name = #{name})")
+  @Select("SELECT EXISTS(SELECT 1 FROM fields WHERE field_name = #{fieldName})")
   boolean existsByName(String name);
 
-  @Insert("INSERT INTO fields (name, date_of_use) VALUES (#{name}, #{dateOfUse})")
+  @Insert("INSERT INTO fields (field_name, date_of_use) VALUES (#{fieldName}, #{dateOfUse})")
   @Options(useGeneratedKeys = true, keyProperty = "id")
   void insertField(Field field);
 
   @Update("UPDATE fields " +
-      "SET name = #{name}, " +
+      "SET Field_name = #{fieldName}, " +
       "date_of_use = #{dateOfUse}, " +
       "WHERE id = #{id}")
   void updateField(Field field);

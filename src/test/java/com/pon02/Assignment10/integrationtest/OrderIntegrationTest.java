@@ -94,7 +94,7 @@ public class OrderIntegrationTest {
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
         JSONAssert.assertEquals("""
                 {
-                     "message": "Order not found for id: 100",
+                     "message": "Order not found for fieldId: 1, orderId: 100",
                      "error": "Not Found",
                      "timestamp": "2024-08-17T16:42:47.123237+09:00[Asia/Tokyo]",
                      "path": "/fields/1/orders/100",
@@ -116,7 +116,7 @@ public class OrderIntegrationTest {
 
     // POSTメソッドで正しくリクエストした時に、オーダーが登録できステータスコード201とメッセージが返されること
     @Test
-    @DataSet(value = "datasets/orders/orders.yml")
+    @DataSet(value = {"datasets/fields/fields.yml", "datasets/orders/orders.yml"})
     @ExpectedDataSet(value = "datasets/orders/insert_order.yml")
     @Transactional
     void オーダーが登録できること() throws Exception {
@@ -124,8 +124,7 @@ public class OrderIntegrationTest {
                         .contentType("application/json")
                         .content("""
                                 {
-                                    "carTypeId": 4,
-                                    "orderStatusId": 1
+                                    "carTypeId": 4
                                 }
                                 """))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
@@ -142,13 +141,14 @@ public class OrderIntegrationTest {
     // （NotBlankのバリデーション確認,orderStatusIdは自動で1が入るようにしているため省略）
     @ParameterizedTest
     @MethodSource("provideStringsForValidation")
-    @DataSet(value = "datasets/orders/orders.yml")
+    @DataSet(value = {"datasets/fields/fields.yml", "datasets/orders/orders.yml"})
     @Transactional
     void オーダーを登録時にcarTypeIdがが不正な値の場合400エラーが返されること(String str,String expectedMessage) throws Exception {
         String response = mockMvc.perform(MockMvcRequestBuilders.post("/fields/1/orders")
                         .contentType("application/json")
                         .content("""
                                 {
+                                    "fieldId": 1,
                                     "carTypeId": "%s",
                                     "orderStatusId": 1
                                 }
@@ -177,15 +177,14 @@ public class OrderIntegrationTest {
 
     //PATCHメソッドで正しくリクエストした時に、オーダーが更新できステータスコード200とメッセージが返されること
     @Test
-    @DataSet(value = "datasets/orders/orders.yml")
+    @DataSet(value = {"datasets/fields/fields.yml", "datasets/orders/orders.yml"})
     @ExpectedDataSet(value = "datasets/orders/update_order.yml")
     @Transactional
     void オーダーが更新できること() throws Exception {
-        String response = mockMvc.perform(MockMvcRequestBuilders.patch("/fields/1/orders")
+        String response = mockMvc.perform(MockMvcRequestBuilders.patch("/fields/1/orders/2")
                         .contentType("application/json")
                         .content("""
                                 {
-                                    "id": 2,
                                     "orderStatusId": 2
                                 }
                                 """))
@@ -198,52 +197,15 @@ public class OrderIntegrationTest {
                 """, response, true);
     }
 
-    // PATCHメソッドでリクエストのidがnullや未登録の時に、ステータスコード400とエラーメッセージが返されること
-    @ParameterizedTest
-    @MethodSource("provideStringsForValidationId")
-    @DataSet(value = "datasets/orders/orders.yml")
-    @Transactional
-    void オーダーを更新時にidが不正な値の場合400エラーが返されること(String str,String expectedMessage) throws Exception {
-        String response = mockMvc.perform(MockMvcRequestBuilders.patch("fields/1/orders")
-                        .contentType("application/json")
-                        .content("""
-                                {
-                                    "id": "%s",
-                                    "orderStatusId": 1
-                                }
-                                """.formatted(str)))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-        JSONAssert.assertEquals("""
-                {
-                     "status": "BAD_REQUEST",
-                     "message": "validation error",
-                     "errors": [
-                         {
-                             "field": "id",
-                             "message": "%s"
-                         }
-                     ]
-                 }
-                """.formatted(expectedMessage), response, true);
-    }
-    private static Stream<Arguments> provideStringsForValidationId() {
-        return Stream.of(
-            Arguments.of("", "必須項目です"),
-            Arguments.of("99", "IDが存在しません")
-        );
-    }
-
     // PATCHメソッドでリクエストのorderStatusIdがnullの時に、ステータスコード400とエラーメッセージが返されること
     @Test
-    @DataSet(value = "datasets/orders/orders.yml")
+    @DataSet(value = {"datasets/fields/fields.yml", "datasets/orders/orders.yml"})
     @Transactional
     void オーダーを更新時にorderStatusIdが不正な値の場合400エラーが返されること() throws Exception {
-        String response = mockMvc.perform(MockMvcRequestBuilders.patch("fields/1/orders")
+        String response = mockMvc.perform(MockMvcRequestBuilders.patch("/fields/1/orders/2")
                         .contentType("application/json")
                         .content("""
                                 {
-                                    "id": 2,
                                     "orderStatusId": null
                                 }
                                 """))

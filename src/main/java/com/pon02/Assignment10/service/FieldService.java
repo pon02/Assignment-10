@@ -32,17 +32,17 @@ public class FieldService {
   }
 
 
-  public Field insertField(String name, LocalDate dateOfUse) {
-    Field field = new Field(null, name, dateOfUse, null);
+  public Field insertField(String FieldName, LocalDate dateOfUse) {
+    Field field = new Field(null, FieldName, dateOfUse, null);
     fieldMapper.insertField(field);
     return field;
   }
 
-  public Field updateField(Integer id, String name, LocalDate dateOfUse) {
+  public Field updateField(Integer id, String fieldName, LocalDate dateOfUse) {
     Field existingField = fieldMapper.findFieldById(id).orElseThrow(() -> new FieldNotFoundException("Field not found for id: " + id));
     Field updatedField = new Field(
         existingField.getId(),
-        name,
+        fieldName,
         dateOfUse,
         existingField.getCreatedAt()
     );

@@ -24,14 +24,14 @@ public class OrderService {
         return this.orderMapper.findOrderById(fieldId,orderId).orElseThrow(() -> new OrderNotFoundException("Order not found for fieldId: " + fieldId + ", orderId: " + orderId));
     }
 
-    public Order insertOrder(Integer fieldId, int carTypeId, int orderStatusId) {
-        Order order = new Order(null,fieldId, carTypeId, orderStatusId,null,null);
+    public Order insertOrder(Integer fieldId, int carTypeId) {
+        Order order = new Order(null, fieldId, carTypeId, 1,null,null);
         orderMapper.insertOrder(order);
         return order;
     }
 
-    public Order updateOrder(Integer id, Integer fieldId, Integer orderStatusId) {
-        Order existingOrder = orderMapper.findOrderById(fieldId, id).orElseThrow(() -> new OrderNotFoundException("Order not found for fieldId: " + fieldId + " and orderId: " + id));
+    public Order updateOrder(Integer orderId, Integer fieldId, Integer orderStatusId) {
+        Order existingOrder = orderMapper.findOrderById(fieldId, orderId).orElseThrow(() -> new OrderNotFoundException("Order not found for fieldId: " + fieldId + " and orderId: " + orderId));
         Order updatedOrder = new Order(
             existingOrder.getId(),
             existingOrder.getFieldId(),

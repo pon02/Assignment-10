@@ -31,59 +31,59 @@ class OrderServiceTest {
     @Test
     public void 全てのオーダーを取得できる() {
         doReturn(List.of(
-                new Order(1, 1, 2, LocalDateTime.of(2024,5,2,9,0,0), LocalDateTime.of(2024,5,2,9,5,0)),
-                new Order(2, 2, 1, LocalDateTime.of(2024,5,2,9,2,0), null)))
-        .when(orderMapper).findAllOrders();
-        List<Order> actual = orderService.findAllOrders();
+                new Order(1, 1,1, 2, LocalDateTime.of(2024,5,2,9,0,0), LocalDateTime.of(2024,5,2,9,5,0)),
+                new Order(2, 1,2, 1, LocalDateTime.of(2024,5,2,9,2,0), null)))
+        .when(orderMapper).findAllOrders(1);
+        List<Order> actual = orderService.findAllOrders(1);
         assertThat(actual).isEqualTo(List.of(
-                new Order(1, 1, 2, LocalDateTime.of(2024,5,2,9,0,0), LocalDateTime.of(2024,5,2,9,5,0)),
-                new Order(2, 2, 1, LocalDateTime.of(2024,5,2,9,2,0), null)));
-        verify(orderMapper,times(1)).findAllOrders();
+                new Order(1, 1,1, 2, LocalDateTime.of(2024,5,2,9,0,0), LocalDateTime.of(2024,5,2,9,5,0)),
+                new Order(2, 1,2, 1, LocalDateTime.of(2024,5,2,9,2,0), null)));
+        verify(orderMapper,times(1)).findAllOrders(1);
     }
 
     @Test
     public void オーダーIDでオーダーを取得できる() {
-        doReturn(Optional.of(new Order(1, 1, 2, LocalDateTime.of(2024, 5, 2, 9, 0, 0),
+        doReturn(Optional.of(new Order(1, 1,1, 2, LocalDateTime.of(2024, 5, 2, 9, 0, 0),
             LocalDateTime.of(2024, 5, 2, 9, 5, 0))))
-            .when(orderMapper).findOrderById(1);
-        Order actual = orderService.findOrderById(1);
-        assertThat(actual).isEqualTo(new Order(1, 1, 2, LocalDateTime.of(2024, 5, 2, 9, 0, 0),
+            .when(orderMapper).findOrderById(1,1);
+        Order actual = orderService.findOrderById(1,1);
+        assertThat(actual).isEqualTo(new Order(1, 1,1, 2, LocalDateTime.of(2024, 5, 2, 9, 0, 0),
             LocalDateTime.of(2024, 5, 2, 9, 5, 0)));
-        verify(orderMapper, times(1)).findOrderById(1);
+        verify(orderMapper, times(1)).findOrderById(1,1);
     }
 
     @Test
     public void オーダーIDが存在しない場合例外がスローされること() {
         doReturn(Optional.empty())
-            .when(orderMapper).findOrderById(100);
-        assertThatThrownBy(() -> orderService.findOrderById(100))
+            .when(orderMapper).findOrderById(1,100);
+        assertThatThrownBy(() -> orderService.findOrderById(1,100))
             .isInstanceOfSatisfying(OrderNotFoundException.class, e -> {
-                assertThat(e.getMessage()).isEqualTo("Order not found for id: 100");
+                assertThat(e.getMessage()).isEqualTo("Order not found for fieldId: 1, orderId: 100");
             });
-        verify(orderMapper, times(1)).findOrderById(100);
+        verify(orderMapper, times(1)).findOrderById(1,100);
     }
 
     @Test
     public void オーダーが正しく1件追加されること() {
-        Order order = new Order(null,1,1,null,null);
+        Order order = new Order(null,1,1,1,null,null);
         doNothing().when(orderMapper).insertOrder(order);
-        Order actual = orderService.insertOrder(1, 1);
+        Order actual = orderService.insertOrder(1,1);
         assertThat(actual).isEqualTo(order);
         verify(orderMapper, times(1)).insertOrder(order);
     }
 
     @Test
     public void オーダーが正しく1件更新されること() {
-        Order existingOrder = new Order(1, 1, 1, LocalDateTime.of(2024, 5, 2, 9, 0, 0),
+        Order existingOrder = new Order(1, 1,1, 1, LocalDateTime.of(2024, 5, 2, 9, 0, 0),
             null);
-        Order updatedOrder = new Order(1, 1, 2, LocalDateTime.of(2024, 5, 2, 9, 0, 0),
+        Order updatedOrder = new Order(1, 1,1, 2, LocalDateTime.of(2024, 5, 2, 9, 0, 0),
             null);
-        doReturn(Optional.of(existingOrder)).when(orderMapper).findOrderById(1);
-        doNothing().when(orderMapper).updateOrder(updatedOrder);
-        Order actual = orderService.updateOrder(1, 2);
+        doReturn(Optional.of(existingOrder)).when(orderMapper).findOrderById(1,1);
+        doNothing().when(orderMapper).updateOrder(updatedOrder,1);
+        Order actual = orderService.updateOrder(1, 1,2);
         assertThat(actual).isEqualTo(updatedOrder);
 
-        verify(orderMapper, times(1)).findOrderById(1);
-        verify(orderMapper, times(1)).updateOrder(updatedOrder);
+        verify(orderMapper, times(1)).findOrderById(1,1);
+        verify(orderMapper, times(1)).updateOrder(updatedOrder,1);
     }
 }

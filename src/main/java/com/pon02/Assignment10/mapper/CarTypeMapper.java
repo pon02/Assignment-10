@@ -21,6 +21,9 @@ public interface CarTypeMapper extends ExistChecker, UniqueNameChecker {
     @Select("SELECT * FROM car_types WHERE id = #{id}")
     Optional<CarType> findCarTypeById(Integer id);
 
+    @Select("SELECT * FROM car_types WHERE LOWER(car_type) LIKE LOWER(CONCAT('%', #{carTypeName}, '%'))")
+    List<CarType> findCarTypeByName(String carTypeName);
+
     @Insert("INSERT INTO car_types (car_type, capacity) VALUES (#{carTypeName}, #{capacity})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertCarType(CarType carType);

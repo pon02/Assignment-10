@@ -26,15 +26,15 @@ class OrderMapperTest {
     @DataSet(value = "datasets/orders/orders.yml")
     @Transactional
     void 全てのオーダーが取得できること() {
-        List<Order> orders = orderMapper.findAllOrders();
+        List<Order> orders = orderMapper.findAllOrders(1);
         LocalDateTime c1 = LocalDateTime.of(2024, 5, 2, 9, 0, 0);
         LocalDateTime c2 = LocalDateTime.of(2024, 5, 2, 9, 2, 0);
         LocalDateTime u1 = LocalDateTime.of(2024, 5, 2, 9, 5, 0);
         assertThat(orders)
                 .hasSize(2)
                 .contains(
-                        new Order(1, 1,2, c1, u1),
-                        new Order(2, 2, 1, c2, null)
+                        new Order(1, 1,1,2, c1, u1),
+                        new Order(2, 1,2, 1, c2, null)
                 );
     }
 
@@ -42,15 +42,15 @@ class OrderMapperTest {
     @DataSet(value = "datasets/orders/order_empty.yml")
     @Transactional
     void オーダーがない時に空のリストが返されること() {
-        assertThat(orderMapper.findAllOrders()).isEmpty();
+        assertThat(orderMapper.findAllOrders(1)).isEmpty();
     }
 
     @Test
     @DataSet(value = "datasets/orders/orders.yml")
     @Transactional
     void オーダーIDでオーダーが取得できること() {
-        Optional<Order> order = orderMapper.findOrderById(1);
-        assertThat(order).contains(new Order(1, 1, 2, LocalDateTime.of(2024, 5, 2, 9, 0, 0),
+        Optional<Order> order = orderMapper.findOrderById(1,1);
+        assertThat(order).contains(new Order(1, 1,1, 2, LocalDateTime.of(2024, 5, 2, 9, 0, 0),
             LocalDateTime.of(2024, 5, 2, 9, 5, 0)));
     }
 
@@ -58,7 +58,7 @@ class OrderMapperTest {
     @DataSet(value = "datasets/orders/order_empty.yml")
     @Transactional
     void 存在しないオーダーIDを指定した時に空で返すこと() {
-        Optional<Order> order = orderMapper.findOrderById(100);
+        Optional<Order> order = orderMapper.findOrderById(1,100);
         assertThat(order).isEmpty();
     }
 
@@ -66,8 +66,8 @@ class OrderMapperTest {
     @DataSet(value = "datasets/orders/orders.yml")
     @Transactional
     void オーダーIDでオーダーが存在するか確認できること() {
-        assertThat(orderMapper.existsById(1)).isTrue();
-        assertThat(orderMapper.existsById(100)).isFalse();
+        assertThat(orderMapper.existsById(1,1)).isTrue();
+        assertThat(orderMapper.existsById(1,100)).isFalse();
     }
 
     @Test
@@ -82,9 +82,9 @@ class OrderMapperTest {
     @DataSet(value = "datasets/orders/order_empty.yml")
     @Transactional
     void オーダーが追加されること() {
-        Order order = new Order(null, 4, 1, null, null);
+        Order order = new Order(null, 1,4, 1, null, null);
         orderMapper.insertOrder(order);
-        List<Order> orders = orderMapper.findAllOrders();
+        List<Order> orders = orderMapper.findAllOrders(1);
         assertThat(orders)
                 .hasSize(1)
                 .usingRecursiveComparison()
@@ -96,20 +96,21 @@ class OrderMapperTest {
     @DataSet(value = "datasets/orders/orders.yml")
     @Transactional
     void オーダーが更新されること() {
-        Order existingOrder = orderMapper.findOrderById(2).get();
+        Order existingOrder = orderMapper.findOrderById(1,2).get();
         Order updatedOrder = new Order(
             existingOrder.getId(),
+            existingOrder.getFieldId(),
             existingOrder.getCarTypeId(),
             2,
             existingOrder.getCreatedAt(),
             LocalDateTime.now().withNano(0)
         );
-        orderMapper.updateOrder(updatedOrder);
-        List<Order> orders = orderMapper.findAllOrders();
+        orderMapper.updateOrder(updatedOrder, 1);
+        List<Order> orders = orderMapper.findAllOrders(1);
         assertThat(orders)
                 .hasSize(2)
             .isEqualTo(List.of(
-                new Order(1, 1, 2, LocalDateTime.of(2024, 5, 2, 9, 0, 0), LocalDateTime.of(2024, 5, 2, 9, 5, 0)),
+                new Order(1, 1,1, 2, LocalDateTime.of(2024, 5, 2, 9, 0, 0), LocalDateTime.of(2024, 5, 2, 9, 5, 0)),
                 updatedOrder));
     }
 }

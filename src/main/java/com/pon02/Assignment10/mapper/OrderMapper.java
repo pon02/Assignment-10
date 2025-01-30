@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -14,29 +15,29 @@ import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface OrderMapper extends ExistChecker {
-    @Select("SELECT * FROM orders")
-    List<Order> findAllOrders();
+    @Select("SELECT * FROM orders WHERE field_id = #{fieldId}")
+    List<Order> findAllOrders(Integer fieldId);
 
-    @Select("SELECT * FROM orders WHERE id = #{id}")
-    Optional<Order> findOrderById(Integer id);
+    @Select("SELECT * FROM orders WHERE field_id = #{fieldId} AND id = #{orderId}")
+    Optional<Order> findOrderById(@Param("fieldId") Integer fieldId, @Param("orderId") Integer orderId);
 
-    @Select("SELECT EXISTS(SELECT 1 FROM orders WHERE id = #{id})")
-    boolean existsById(Integer id);
+    @Select("SELECT EXISTS(SELECT 1 FROM orders WHERE field_id = #{fieldId} AND id = #{orderId})")
+    boolean existsById(@Param("fieldId") Integer fieldId, @Param("orderId") Integer orderId);
 
     @Select("SELECT EXISTS(SELECT 1 FROM orders WHERE car_type_id = #{carTypeId})")
     boolean existsByCarTypeId(Integer carTypeId);
 
 
-    @Insert("INSERT INTO orders (car_type_id, order_status_id) VALUES (#{carTypeId}, #{orderStatusId})")
+    @Insert("INSERT INTO orders (field_id, car_type_id, order_status_id) VALUES (#{fieldId}, #{carTypeId}, #{orderStatusId})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertOrder(Order order);
 
     @Update("UPDATE orders " +
-        "SET order_status_id = #{orderStatusId}, " +
+        "SET order_status_id = #{order.orderStatusId}, " +
         "updated_at = CURRENT_TIMESTAMP " +
-        "WHERE id = #{id}")
-    void updateOrder(Order order);
+        "WHERE id = #{order.id} AND field_id = #{fieldId}")
+    void updateOrder(@Param("order") Order order, @Param("fieldId") Integer fieldId);
 
-    @Delete("DELETE FROM orders WHERE id = #{id}")
-    void deleteOrder(Integer id);
+    @Delete("DELETE FROM orders WHERE id = #{orderId} AND field_id = #{fieldId}")
+    void deleteOrder(@Param("fieldId") Integer fieldId, @Param("orderId") Integer orderId);
 }

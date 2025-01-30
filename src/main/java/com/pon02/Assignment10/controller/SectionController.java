@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -37,6 +38,11 @@ public class SectionController {
         return sectionService.findSectionById(id);
     }
 
+    @GetMapping(value = "/sections", params = "name")
+    public List<Section> getSectionByName(@RequestParam String sectionName) {
+        return sectionService.findSectionByName(sectionName);
+    }
+
     @PostMapping("/sections")
     public ResponseEntity<Response> insert(@RequestBody @Validated(Create.class) SectionForm sectionForm, UriComponentsBuilder uriBuilder) {
         Section section = sectionService.insertSection(sectionForm.getSectionName());
@@ -45,9 +51,9 @@ public class SectionController {
         return ResponseEntity.created(location).body(body);
     }
 
-    @PatchMapping("/sections")
-    public ResponseEntity<Response> update(@RequestBody @Validated(Update.class) SectionForm sectionForm, UriComponentsBuilder uriBuilder) {
-        Section section = sectionService.updateSection(sectionForm.getId(), sectionForm.getSectionName());
+    @PatchMapping("/sections/{id}")
+    public ResponseEntity<Response> update(@PathVariable Integer id, @RequestBody @Validated(Update.class) SectionForm sectionForm, UriComponentsBuilder uriBuilder) {
+        Section section = sectionService.updateSection(id, sectionForm.getSectionName());
         URI location = uriBuilder.path("/sections/{id}").buildAndExpand(section.getId()).toUri();
         Response body = new Response("Section updated");
         return ResponseEntity.ok(body);

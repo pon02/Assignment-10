@@ -20,6 +20,9 @@ public interface SectionMapper extends ExistChecker, UniqueNameChecker {
     @Select("SELECT * FROM sections WHERE id = #{id}")
     Optional<Section> findSectionById(Integer id);
 
+    @Select("SELECT * FROM sections WHERE LOWER(section_name) LIKE LOWER(CONCAT('%', #{sectionName}, '%'))")
+    List<Section> findSectionByName(String sectionName);
+
     @Select("SELECT EXISTS(SELECT 1 FROM sections WHERE section_name = #{sectionName})")
     boolean existsByName(String sectionName);
 

@@ -9,14 +9,16 @@ import java.util.Objects;
 @Getter
 public class Order {
     private Integer id;
+    private Integer fieldId;
     private Integer carTypeId;
     @Setter
     private Integer orderStatusId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public Order(Integer id, Integer carTypeId, Integer orderStatusId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Order(Integer id, Integer fieldId, Integer carTypeId, Integer orderStatusId, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
+        this.fieldId = fieldId;
         this.carTypeId = carTypeId;
         this.orderStatusId = orderStatusId;
         this.createdAt = createdAt;
@@ -29,6 +31,7 @@ public class Order {
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
         return id == order.id &&
+                fieldId == order.fieldId &&
                 carTypeId == order.carTypeId &&
                 orderStatusId == order.orderStatusId &&
                 Objects.equals(createdAt, order.createdAt) &&
@@ -37,11 +40,11 @@ public class Order {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, carTypeId, orderStatusId, createdAt, updatedAt);
+        return Objects.hash(id, fieldId, carTypeId, orderStatusId, createdAt, updatedAt);
     }
 
     @Override
     public String toString() {
-        return String.format("Order{id=%d, carTypeId=%d, orderStatusId=%d, createdAt=%s, updatedAt=%s}", id, carTypeId, orderStatusId, createdAt, updatedAt);
+        return String.format("Order{id=%d, fieldId=%d, carTypeId=%d, orderStatusId=%d, createdAt=%s, updatedAt=%s}", id, fieldId, carTypeId, orderStatusId, createdAt, updatedAt);
     }
 }

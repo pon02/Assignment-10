@@ -240,11 +240,10 @@ public class CarTypeIntegrationTest {
     @ExpectedDataSet(value = "datasets/car_types/update_car_type.yml")
     @Transactional
     void カータイプが更新できること() throws Exception {
-        String response = mockMvc.perform(MockMvcRequestBuilders.patch("/car-types")
+        String response = mockMvc.perform(MockMvcRequestBuilders.patch("/car-types/1")
                         .contentType("application/json")
                         .content("""
                                 {
-                                    "id": 1,
                                     "carTypeName": "セダン4人",
                                     "capacity": 4
                                 }
@@ -258,43 +257,6 @@ public class CarTypeIntegrationTest {
                 """, response, true);
     }
 
-    // PATCHメソッドでリクエストのidがnullや存在しない場合、ステータスコード400とエラーメッセージが返されること
-    @ParameterizedTest
-    @MethodSource("provideStringsForPatchId")
-    @DataSet(value = "datasets/car_types/car_types.yml")
-    @Transactional
-    void カータイプを更新時にidが不正な値の場合400エラーが返されること(String str,String expectedMessage) throws Exception {
-        String response = mockMvc.perform(MockMvcRequestBuilders.patch("/car-types")
-                        .contentType("application/json")
-                        .content("""
-                                {
-                                    "id": "%s",
-                                    "carTypeName": "セダン4人",
-                                    "capacity": 4
-                                }
-                                """.formatted(str)))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-        JSONAssert.assertEquals("""
-                {
-                     "status": "BAD_REQUEST",
-                     "message": "validation error",
-                     "errors": [
-                         {
-                             "field": "id",
-                             "message": "%s"
-                         }
-                     ]
-                 }
-                """.formatted(expectedMessage), response, true);
-    }
-    private static Stream<Arguments> provideStringsForPatchId() {
-        return Stream.of(
-            Arguments.of("", "必須項目です"),
-            Arguments.of("99", "IDが存在しません")
-        );
-    }
-
     // PATCHメソッドでリクエストのcarTypeNameが空文字や50文字を超える場合、または登録済みの車種名を入力された時に、
     // ステータスコード400とエラーメッセージが返されること
     @ParameterizedTest
@@ -302,11 +264,10 @@ public class CarTypeIntegrationTest {
     @DataSet(value = "datasets/car_types/car_types.yml")
     @Transactional
     void カータイプを更新時にcarTypeNameが不正な値の場合400エラーが返されること(String str,String expectedMessage) throws Exception {
-        String response = mockMvc.perform(MockMvcRequestBuilders.patch("/car-types")
+        String response = mockMvc.perform(MockMvcRequestBuilders.patch("/car-types/1")
                         .contentType("application/json")
                         .content("""
                                 {
-                                    "id": 1,
                                     "carTypeName": "%s",
                                     "capacity": 4
                                 }
@@ -339,11 +300,10 @@ public class CarTypeIntegrationTest {
     @DataSet(value = "datasets/car_types/car_types.yml")
     @Transactional
     void カータイプを更新時にcapacityが不正な値の場合400エラーが返されること() throws Exception {
-        String response = mockMvc.perform(MockMvcRequestBuilders.patch("/car-types")
+        String response = mockMvc.perform(MockMvcRequestBuilders.patch("/car-types/1")
                         .contentType("application/json")
                         .content("""
                                 {
-                                    "id": 1,
                                     "carTypeName": "セダン4人",
                                     "capacity": null
                                 }

@@ -51,9 +51,9 @@ public class FieldController {
     return ResponseEntity.created(location).body(body);
   }
 
-  @PatchMapping("/fields")
-  public ResponseEntity<Response> update(@RequestBody @Validated(Update.class) FieldForm fieldForm, UriComponentsBuilder uriBuilder) {
-    Field field = fieldService.updateField(fieldForm.getId(), fieldForm.getFieldName(), fieldForm.getDateOfUse());
+  @PatchMapping("/fields/{id}")
+  public ResponseEntity<Response> update(@PathVariable Integer id, @RequestBody @Validated(Update.class) FieldForm fieldForm, UriComponentsBuilder uriBuilder) {
+    Field field = fieldService.updateField(id, fieldForm.getFieldName(), fieldForm.getDateOfUse());
     URI location = uriBuilder.path("/fields/{id}").buildAndExpand(field.getId()).toUri();
     Response body = new Response("Field updated");
     return ResponseEntity.ok(body);

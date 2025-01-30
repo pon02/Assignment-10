@@ -15,11 +15,11 @@ import lombok.Getter;
 
 @Getter
 public class FieldForm {
-  @Min(1)
-  @NotNull(message = "必須項目です", groups = {Update.class})
-  @ExistsId(checker = FieldChecker.class, groups = {Update.class})
+/*  @Min(1)
+  @NotNull(message = "必須項目です")
+  @ExistsId(checker = FieldChecker.class)
   private Integer id;
-
+*/
   @Size(max = 50, message = "50文字以内で入力してください", groups = {Create.class, Update.class})
   @NotBlank(message = "必須項目です", groups = {Create.class, Update.class})
   private String fieldName;

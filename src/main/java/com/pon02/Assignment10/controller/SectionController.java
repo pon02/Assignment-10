@@ -51,9 +51,9 @@ public class SectionController {
         return ResponseEntity.created(location).body(body);
     }
 
-    @PatchMapping("/sections")
-    public ResponseEntity<Response> update(@RequestBody @Validated(Update.class) SectionForm sectionForm, UriComponentsBuilder uriBuilder) {
-        Section section = sectionService.updateSection(sectionForm.getId(), sectionForm.getSectionName());
+    @PatchMapping("/sections/{id}")
+    public ResponseEntity<Response> update(@PathVariable Integer id, @RequestBody @Validated(Update.class) SectionForm sectionForm, UriComponentsBuilder uriBuilder) {
+        Section section = sectionService.updateSection(id, sectionForm.getSectionName());
         URI location = uriBuilder.path("/sections/{id}").buildAndExpand(section.getId()).toUri();
         Response body = new Response("Section updated");
         return ResponseEntity.ok(body);

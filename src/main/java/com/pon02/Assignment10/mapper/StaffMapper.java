@@ -22,7 +22,7 @@ public interface StaffMapper extends ExistChecker {
   @Select("SELECT * FROM staffs WHERE field_id = #{fieldId} AND id = #{staffId}")
   Optional<Staff> findStaffById(@Param("fieldId") Integer fieldId, @Param("staffId") Integer staffId);
 
-  @Select("SELECT EXISTS(SELECT 1 FROM staffs WHERE field_id = #{fieldId} AND id = #{staffId}")
+  @Select("SELECT EXISTS(SELECT 1 FROM staffs WHERE field_id = #{fieldId} AND id = #{staffId})")
   boolean existsById(@Param("fieldId") Integer fieldId, @Param("staffId") Integer staffId);
 
   @Select("SELECT EXISTS(SELECT 1 FROM staffs WHERE section_id = #{sectionId})")
@@ -33,7 +33,7 @@ public interface StaffMapper extends ExistChecker {
   void insertStaff(Staff staff);
 
   @Update("UPDATE staffs " +
-      "SET staff_status_id = #{staffStatusId}, " +
+      "SET staff_status_id = #{staff.staffStatusId}, " +
       "updated_at = CURRENT_TIMESTAMP " +
       "WHERE id = #{staff.id} AND field_id = #{fieldId}")
   void updateStaff(@Param("staff") Staff staff, @Param("fieldId") Integer fieldId);

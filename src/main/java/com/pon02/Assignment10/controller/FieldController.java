@@ -7,6 +7,7 @@ import com.pon02.Assignment10.service.FieldService;
 import com.pon02.Assignment10.validation.validationGroup.Create;
 import com.pon02.Assignment10.validation.validationGroup.Update;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -38,9 +39,14 @@ public class FieldController {
     return fieldService.findFieldById(id);
   }
 
-  @GetMapping(value = "/fields", params = "fieldName")
-  public List<Field> getFieldByName(@RequestParam String fieldName) {
+  @GetMapping(value = "/fields/name")
+  public List<Field> getFieldByName(@RequestParam ("value") String fieldName) {
     return fieldService.findFieldByName(fieldName);
+  }
+
+  @GetMapping(value = "/fields", params = "dateOfUse")
+  public List<Field> getFieldByDateOfUse(@RequestParam LocalDate dateOfUse) {
+    return fieldService.findFieldByDateOfUse(LocalDate.parse(dateOfUse.toString()));
   }
 
   @PostMapping("/fields")

@@ -3,6 +3,7 @@ cacheTableNames: false
 properties:
   schema: pick_up_taxi_db
 caseInsensitiveStrategy: LOWERCASE
+columnSensing: true
 connectionConfig:
   url: "jdbc:mysql://localhost:3307/pick_up_taxi_db"
   user: "user"

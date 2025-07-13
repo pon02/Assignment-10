@@ -1,0 +1,11 @@
+staffs:
+  - id: 1
+    field_id: 1
+    section_id: 1
+    staff_status_id: 2
+    created_at: 2024-05-02T09:00:00+09:00
+  - id: 2
+    field_id: 1
+    section_id: 2
+    staff_status_id: 2
+    created_at: 2024-05-02T09:02:00+09:00

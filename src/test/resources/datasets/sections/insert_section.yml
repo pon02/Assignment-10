@@ -1,0 +1,7 @@
+sections:
+  - id: 1
+    section_name: 大道具
+  - id: 2
+    section_name: 音響
+  - id: 3
+    section_name: 照明

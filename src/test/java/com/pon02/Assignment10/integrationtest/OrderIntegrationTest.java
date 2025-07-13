@@ -116,7 +116,7 @@ public class OrderIntegrationTest {
 
     // POSTメソッドで正しくリクエストした時に、オーダーが登録できステータスコード201とメッセージが返されること
     @Test
-    @DataSet(value = {"datasets/fields/fields.yml", "datasets/orders/orders.yml"})
+    @DataSet(value = {"datasets/fields/fields.yml", "datasets/car_types/car_types.yml", "datasets/orders/orders.yml"})
     @ExpectedDataSet(value = "datasets/orders/insert_order.yml")
     @Transactional
     void オーダーが登録できること() throws Exception {
@@ -124,7 +124,7 @@ public class OrderIntegrationTest {
                         .contentType("application/json")
                         .content("""
                                 {
-                                    "carTypeId": 4
+                                    "carTypeId": 1
                                 }
                                 """))
                 .andExpect(MockMvcResultMatchers.status().isCreated())

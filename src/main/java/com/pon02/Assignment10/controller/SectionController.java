@@ -38,7 +38,7 @@ public class SectionController {
         return sectionService.findSectionById(id);
     }
 
-    @GetMapping(value = "/sections", params = "name")
+    @GetMapping(value = "/sections", params = "sectionName")
     public List<Section> getSectionByName(@RequestParam String sectionName) {
         return sectionService.findSectionByName(sectionName);
     }

@@ -8,6 +8,6 @@ orders:
     order_status_id: 1
     updated_at:
   - field_id: 1
-    car_type_id: 4
+    car_type_id: 1
     order_status_id: 1
     updated_at:

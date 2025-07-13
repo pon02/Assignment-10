@@ -31,6 +31,13 @@ public class FieldService {
     return fields;
   }
 
+  public List<Field> findFieldByDateOfUse(LocalDate dateOfUse) {
+    List<Field> fields = this.fieldMapper.findFieldByDateOfUse(dateOfUse);
+    if (fields.isEmpty()) {
+      throw new FieldNotFoundException("Field not found for date of use: " + dateOfUse);
+    }
+    return fields;
+  }
 
   public Field insertField(String FieldName, LocalDate dateOfUse) {
     Field field = new Field(null, FieldName, dateOfUse, null);

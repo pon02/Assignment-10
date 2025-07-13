@@ -17,8 +17,8 @@
 * MySQL
 * Docker
 * Swagger
-* CI/CD
-* AWS（実施予定）
+* CI
+* AWS（使用予定）
 ## アプリケーション概略図
 <img src="img/概略図.png" alt="アプリケーション概略図" width=650>  
 
@@ -45,6 +45,7 @@
 | カラム名(論理名) | カラム名(物理名)     | 型         | PK  | NN  | FK  | 備考             |  
 |-----------|---------------|-----------|:---:|:---:|:---:|----------------|  
 | ID        | order_id      | INT       |  ○  |  ○  |     | AUTO INCREMENT |  
+| フィールドID   | field_id      | INT       |     |  ○  |  ○  |                |  
 | 車種ID      | car_type_id   | INT       |     |  ○  |  ○  |                |  
 | 車両ステータスID | car_status_id | INT       |     |  ○  |  ○  |                |  
 | 作成日時      | created_at    | TIMESTAMP |     |  ○  |     |                |  
@@ -70,6 +71,7 @@
 | カラム名(論理名)   | カラム名(物理名)       | 型         | PK  | NN  | FK  | 備考             |  
 |-------------|-----------------|-----------|:---:|:---:|:---:|----------------|  
 | ID          | staff_id        | INT       |  ○  |  ○  |     | AUTO INCREMENT |  
+| フィールドID   | field_id      | INT       |     |  ○  |  ○  |                |  
 | セクションID     | section_id      | INT       |     |  ○  |  ○  |                |  
 | スタッフステータスID | staff_status_id | INT       |     |  ○  |  ○  |                |  
 | 作成日時        | created_at      | TIMESTAMP |     |  ○  |     |                |  
@@ -97,7 +99,6 @@
 | フィールド名    | name        | VARCHAR(100) |     |  ○  |     |                |
 | 使用日       | date_of_use | DATE         |     |  ○  |     |                |
 | 作成日時      | created_at  | TIMESTAMP    |     |  ○  |     |                |
-| 更新日時      | updated_at  | TIMESTAMP    |     |     |     |                |
 
 ### API仕様
 [API仕様書](https://pon02.github.io/Assignment-10/)参照
@@ -118,8 +119,6 @@
     ```
 
 ## 今後の実装予定
-* CIの実装
-* CRUD機能の実装
 * テストの実装
 * AWSへのデプロイ
 * フロントエンドの実装  

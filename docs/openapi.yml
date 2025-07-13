@@ -32,7 +32,7 @@ paths:
               $ref: '#/components/schemas/fields'
               example:
                 fieldId: null(自動採番)
-                name: フラワーフェスティバル2024/5/2朝
+                FieldName: フラワーフェスティバル2024/5/2朝
                 dateOfUse: 2024-05-02
                 createdAt: null(自動作成日時取得)
       responses:
@@ -40,8 +40,6 @@ paths:
           $ref: '#/components/responses/201'
         '400':
           $ref: '#/components/responses/400'
-        '409':
-          $ref: '#/components/responses/409'
         'default':
           $ref: '#/components/responses/default'
 
@@ -51,7 +49,7 @@ paths:
       summary: 配車管理ページの取得
       description: クエリパラメータで入力された条件に合致する配車管理ページを取得する。条件を入力しない場合は全ての配車管理ページを取得する。
       parameters:
-        - name: name
+        - name: fieldName
           in: query
           description: 名称に入力した文字が含まれる配車管理が検索される
           required: false
@@ -63,7 +61,7 @@ paths:
           description: 入力した使用日付が含まれる配車管理が検索される
           required: false
           schema:
-          type: string
+          type: date
           format: date
           example: 2024-05-02
       responses:
@@ -145,8 +143,8 @@ paths:
                 dateOfUse: 2024-05-02
                 updatedAt: null(自動作成日時取得)
       responses:
-        '204':
-          description: NoContent
+        '200':
+          description: OK
           headers:
             Location:
               description: location url
@@ -161,11 +159,9 @@ paths:
                   message:
                     type: string
                 example:
-                  message: 正常に更新されました
+                  message: field updated
         '400':
           $ref: '#/components/responses/400'
-        '404':
-          $ref: '#/components/responses/404'
         'default':
           $ref: '#/components/responses/default'
 
@@ -185,22 +181,7 @@ paths:
             example: 1
       responses:
         '204':
-          description: NoContent
-          headers:
-            Location:
-              description: location url
-              schema:
-                type: string
-                format: uri
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                example:
-                  message: 正常に削除されました
+          $ref: '#/components/responses/204'
         '400':
           $ref: '#/components/responses/400'
         '404':
@@ -231,8 +212,6 @@ paths:
           $ref: '#/components/responses/201'
         '400':
           $ref: '#/components/responses/400'
-        '409':
-          $ref: '#/components/responses/409'
         'default':
           $ref: '#/components/responses/default'
 
@@ -269,12 +248,52 @@ paths:
                       updatedAt: null
         '400':
           $ref: '#/components/responses/400'
+        'default':
+          $ref: '#/components/responses/default'
+
+  /fields/{fieldId}/orders/{orderId}:
+    get:
+      tags:
+        - orders
+      summary: 指定したIDの配車情報の取得
+      description: 指定したIDの配車情報を取得する
+      parameters:
+        - name: fieldId
+          in: path
+          description: 取得したい配車管理ページのID
+          required: true
+          schema:
+            type: int
+            format: int64
+            example: 1
+        - name: orderId
+          in: path
+          description: 取得したい配車情報のID
+          required: true
+          schema:
+            type: int
+            format: int64
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/orders'
+                example:
+                  orderId: 1
+                  carTypeId: 1
+                  orderStatusId: 1
+                  createdAt: 2024-05-02T09:00:00.000+00:00
+                  updatedAt: null
+        '400':
+          $ref: '#/components/responses/400'
         '404':
           $ref: '#/components/responses/404'
         'default':
           $ref: '#/components/responses/default'
 
-  /fields/{fieldId}/orders/{orderId}:
     patch:
       tags:
         - orders
@@ -292,8 +311,23 @@ paths:
                 orderStatusId: 2
                 updatedAt: null(自動作成日時取得)
       responses:
-        '204':
-          $ref: '#/components/responses/204'
+        '200':
+          description: OK
+          headers:
+            Location:
+              description: location url
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Order updated
         '400':
           $ref: '#/components/responses/400'
         '404':
@@ -348,8 +382,6 @@ paths:
           $ref: '#/components/responses/201'
         '400':
           $ref: '#/components/responses/400'
-        '409':
-          $ref: '#/components/responses/409'
         'default':
           $ref: '#/components/responses/default'
 
@@ -386,12 +418,52 @@ paths:
                       updatedAt: null
         '400':
           $ref: '#/components/responses/400'
+        'default':
+          $ref: '#/components/responses/default'
+
+  /fields/{fieldId}/staffs/{staffId}:
+    get:
+      tags:
+        - staffs
+      summary: 指定したIDの乗車スタッフの取得
+      description: 指定したIDの乗車スタッフ情報を取得する
+      parameters:
+        - name: fieldId
+          in: path
+          description: 取得したい配車管理ページのID
+          required: true
+          schema:
+            type: int
+            format: int64
+            example: 1
+        - name: staffId
+          in: path
+          description: 取得したい乗車スタッフのID
+          required: true
+          schema:
+            type: int
+            format: int64
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/staffs'
+                example:
+                  staffId: 1
+                  sectionId: 1
+                  staffStatusId: 1
+                  createdAt: 2024-05-02T09:00:00.000+00:00
+                  updatedAt: null
+        '400':
+          $ref: '#/components/responses/400'
         '404':
           $ref: '#/components/responses/404'
         'default':
           $ref: '#/components/responses/default'
 
-  /fields/{fieldId}/staffs/{staffId}:
     patch:
       tags:
         - staffs
@@ -409,8 +481,23 @@ paths:
                 staffStatusId: 2
                 updatedAt: null(自動作成日時取得)
       responses:
-        '204':
-          $ref: '#/components/responses/204'
+        '200':
+          description: OK
+          headers:
+            Location:
+              description: location url
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Staff updated
         '400':
           $ref: '#/components/responses/400'
         '404':
@@ -463,8 +550,6 @@ paths:
           $ref: '#/components/responses/201'
         '400':
           $ref: '#/components/responses/400'
-        '409':
-          $ref: '#/components/responses/409'
         'default':
           $ref: '#/components/responses/default'
 
@@ -497,12 +582,42 @@ paths:
                       capacity: 7
         '400':
           $ref: '#/components/responses/400'
+        'default':
+          $ref: '#/components/responses/default'
+
+  /car-types/{carTypeId}:
+    get:
+      tags:
+        - car-types
+      summary: 指定したIDの車両種別の取得
+      description: 指定したIDの車両種別情報を取得する
+      parameters:
+        - name: carTypeId
+          in: path
+          description: 取得したい車両種別のID
+          required: true
+          schema:
+            type: int
+            format: int64
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/car-types'
+                example:
+                  carTypeId: 1
+                  carType: セダン4人乗り
+                  capacity: 4
+        '400':
+          $ref: '#/components/responses/400'
         '404':
           $ref: '#/components/responses/404'
         'default':
           $ref: '#/components/responses/default'
 
-  /car-types/{carTypeId}:
     patch:
       tags:
         - car-types
@@ -519,8 +634,23 @@ paths:
                 carType: セダン4人乗り
                 capacity: 4
       responses:
-        '204':
-          $ref: '#/components/responses/204'
+        '200':
+          description: OK
+          headers:
+            Location:
+              description: location url
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Car type updated
         '400':
           $ref: '#/components/responses/400'
         '404':
@@ -572,8 +702,6 @@ paths:
           $ref: '#/components/responses/201'
         '400':
           $ref: '#/components/responses/400'
-        '409':
-          $ref: '#/components/responses/409'
         'default':
           $ref: '#/components/responses/default'
 
@@ -604,12 +732,41 @@ paths:
                       sectionName: 小道具
         '400':
           $ref: '#/components/responses/400'
+        'default':
+          $ref: '#/components/responses/default'
+
+  /sections/{sectionId}:
+    get:
+      tags:
+        - sections
+      summary: 指定したIDのスタッフ部署の取得
+      description: 指定したIDのスタッフ部署情報を取得する
+      parameters:
+        - name: sectionId
+          in: path
+          description: 取得したいスタッフ部署のID
+          required: true
+          schema:
+            type: int
+            format: int64
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sections'
+                example:
+                  sectionId: 1
+                  sectionName: 大道具
+        '400':
+          $ref: '#/components/responses/400'
         '404':
           $ref: '#/components/responses/404'
         'default':
           $ref: '#/components/responses/default'
 
-  /sections/{sectionId}:
     patch:
       tags:
         - sections
@@ -625,8 +782,23 @@ paths:
                 sectionId: 1
                 sectionName: 大道具
       responses:
-        '204':
-          $ref: '#/components/responses/204'
+        '200':
+            description: OK
+            headers:
+                Location:
+                description: location url
+                schema:
+                    type: string
+                    format: uri
+            content:
+                application/json:
+                schema:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    example:
+                      message: Section updated
         '400':
           $ref: '#/components/responses/400'
         '404':
@@ -825,7 +997,7 @@ components:
               message:
                 type: string
             example:
-              message: "正常に更新されました"
+              message: "正常に削除されました"
 
     400:
       description: "BadRequest"
@@ -848,17 +1020,6 @@ components:
           example:
             status: "404"
             error: "NOT_FOUND"
-            path: "指定したパス"
-            timestamp: "2024-05-02T09:00:00.000+00:00"
-    409:
-      description: "Conflict"
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorModel'
-          example:
-            status: "409"
-            error: "CONFLICT"
             path: "指定したパス"
             timestamp: "2024-05-02T09:00:00.000+00:00"
 

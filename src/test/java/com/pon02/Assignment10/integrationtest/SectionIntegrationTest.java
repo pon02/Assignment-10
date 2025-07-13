@@ -16,6 +16,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
@@ -96,7 +98,7 @@ public class SectionIntegrationTest {
   @DataSet("datasets/sections/sections.yml")
   @Transactional
   void セクション名でセクションが取得できること() throws Exception {
-    mockMvc.perform(get("/sections").param("name", "大道具"))
+    mockMvc.perform(get("/sections?sectionName=大道具"))
         .andExpect(status().isOk())
         .andExpect(content().json("""
                 [ { "id": 1, "sectionName": "大道具" } ]
@@ -108,7 +110,7 @@ public class SectionIntegrationTest {
   @DataSet("datasets/sections/sections.yml")
   @Transactional
   void 存在しないセクション名を指定した時に404エラーが返されること() throws Exception {
-    String response = mockMvc.perform(get("/sections").param("name", "美術"))
+    String response = mockMvc.perform(get("/sections?sectionName=美術"))
         .andExpect(status().isNotFound())
         .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
     JSONAssert.assertEquals("""
@@ -116,7 +118,7 @@ public class SectionIntegrationTest {
               "message": "Section not found for name: 美術",
               "error": "Not Found",
               "timestamp": "2024-08-17T16:42:47.123237+09:00[Asia/Tokyo]",
-              "path": "/sections?name=美術",
+              "path": "/sections?sectionName=美術",
               "status": "404"
             }
             """, response, new CustomComparator(JSONCompareMode.STRICT,
@@ -125,19 +127,21 @@ public class SectionIntegrationTest {
 
   // POSTメソッドで正しくリクエストした時に、セクションが登録できステータスコード201とメッセージが返されること
   @Test
-  @DataSet("datasets/sections/section_empty.yml")
+  @DataSet(value = "datasets/sections/sections.yml",
+  cleanBefore = true,
+  executeStatementsBefore = "ALTER TABLE sections AUTO_INCREMENT = 1")
   @ExpectedDataSet("datasets/sections/insert_section.yml")
   @Transactional
   void セクションが登録できること() throws Exception {
-    String response = mockMvc.perform(post("/sections")
+    String response = mockMvc.perform(MockMvcRequestBuilders.post("/sections")
             .contentType("application/json")
             .content("""
                     {
                     "sectionName": "照明"
                      }
                     """))
-        .andExpect(status().isCreated())
-        .andExpect(header().exists("Location"))
+        .andExpect(MockMvcResultMatchers.status().isCreated())
+        .andExpect(MockMvcResultMatchers.header().exists("Location"))
         .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
     JSONAssert.assertEquals("""
             {
@@ -153,14 +157,14 @@ public class SectionIntegrationTest {
   @DataSet("datasets/sections/sections.yml")
   @Transactional
   void 新規登録時sectionNameが不正な場合400エラーが返されること(String name, String msg) throws Exception {
-    String response = mockMvc.perform(post("/sections")
+    String response = mockMvc.perform(MockMvcRequestBuilders.post("/sections")
             .contentType("application/json")
             .content("""
                     {
                         "sectionName": "%s"
                     }
                     """.formatted(name)))
-        .andExpect(status().isBadRequest())
+        .andExpect(MockMvcResultMatchers.status().isBadRequest())
         .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
     JSONAssert.assertEquals("""
             {
@@ -190,14 +194,14 @@ public class SectionIntegrationTest {
   @ExpectedDataSet("datasets/sections/update_section.yml")
   @Transactional
   void セクションが更新できること() throws Exception {
-    String response = mockMvc.perform(patch("/sections/2")
+    String response = mockMvc.perform(MockMvcRequestBuilders.patch("/sections/2")
             .contentType("application/json")
             .content("""
                     {
                         "sectionName": "音響A"
                     }
                     """))
-        .andExpect(status().isOk())
+        .andExpect(MockMvcResultMatchers.status().isOk())
         .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
     JSONAssert.assertEquals("""
             {
@@ -213,14 +217,14 @@ public class SectionIntegrationTest {
   @DataSet("datasets/sections/sections.yml")
   @Transactional
   void 更新時sectionNameが不正な場合400エラーが返されること(String name, String msg) throws Exception {
-    String response = mockMvc.perform(patch("/sections/1")
+    String response = mockMvc.perform(MockMvcRequestBuilders.patch("/sections/1")
             .contentType("application/json")
             .content("""
                     {
                         "sectionName": "%s"
                     }
                     """.formatted(name)))
-        .andExpect(status().isBadRequest())
+        .andExpect(MockMvcResultMatchers.status().isBadRequest())
         .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
     JSONAssert.assertEquals("""
             {

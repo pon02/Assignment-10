@@ -109,7 +109,7 @@ public class StaffIntegrationTest {
   }
 
   @Test
-  @DataSet(value = {"datasets/fields/fields.yml", "datasets/staffs/staffs.yml"})
+  @DataSet(value = {"datasets/fields/fields.yml", "datasets/sections/sections.yml", "datasets/staffs/staffs.yml"})
   @ExpectedDataSet(value = "datasets/staffs/insert_staff.yml")
   @Transactional
   void スタッフが登録できること() throws Exception {
@@ -117,7 +117,7 @@ public class StaffIntegrationTest {
             .contentType("application/json")
             .content("""
                                 {
-                                    "sectionId": 3
+                                    "sectionId": 2
                                 }
                                 """))
         .andExpect(MockMvcResultMatchers.status().isCreated())

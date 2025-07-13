@@ -186,7 +186,7 @@ public class FieldIntegrationTest {
   void フィールド使用日で存在しない日付を指定した場合404エラーが返ること() throws Exception {
     String response = mockMvc.perform(MockMvcRequestBuilders.get("/fields")
             .param("dateOfUse", "2026-01-29"))
-        .andExpect(status().isNotFound())
+        .andExpect(MockMvcResultMatchers.status().isNotFound())
         .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
     JSONAssert.assertEquals("""
@@ -217,8 +217,8 @@ public class FieldIntegrationTest {
                                     "dateOfUse": "2125-01-30"
                                 }
                                 """))
-        .andExpect(status().isCreated())
-        .andExpect(header().exists("Location"))
+        .andExpect(MockMvcResultMatchers.status().isCreated())
+        .andExpect(MockMvcResultMatchers.header().exists("Location"))
         .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
     JSONAssert.assertEquals("""
@@ -234,20 +234,18 @@ public class FieldIntegrationTest {
   @DataSet(value = "datasets/fields/field_empty.yml")
   @Transactional
   void フィールドを登録時に不正な値の場合400エラーが返されること(String fieldName, String dateOfUse, String expectedField, String expectedMessage) throws Exception {
-    String body = """
+    String response = mockMvc.perform(MockMvcRequestBuilders.post("/fields")
+        .contentType("application/json")
+        .content("""
             {
-                "fieldName": %s,
-                "dateOfUse": %s
+                "fieldName": "%s",
+                "dateOfUse": "%s"
             }
         """.formatted(
-        fieldName == null ? null : "\"" + fieldName + "\"",
-        dateOfUse == null ? null : "\"" + dateOfUse + "\""
-    );
-
-    String response = mockMvc.perform(MockMvcRequestBuilders.post("/fields")
-            .contentType("application/json")
-            .content(body))
-        .andExpect(status().isBadRequest())
+            null == fieldName ? "" : fieldName,
+            null == dateOfUse ? "" : dateOfUse
+        )))
+        .andExpect(MockMvcResultMatchers.status().isBadRequest())
         .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
     JSONAssert.assertEquals("""
@@ -286,7 +284,7 @@ public class FieldIntegrationTest {
                                     "dateOfUse": "2125-01-30"
                                 }
                                 """))
-        .andExpect(status().isOk())
+        .andExpect(MockMvcResultMatchers.status().isOk())
         .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
     JSONAssert.assertEquals("""
@@ -297,36 +295,36 @@ public class FieldIntegrationTest {
   }
 
   // PATCH: フィールド更新時に不正値で400が返ること
-  @Test
+  @ParameterizedTest
+  @MethodSource("provideFieldValidationData")
   @DataSet(value = "datasets/fields/fields.yml")
   @Transactional
-  void フィールド更新時に不正な値で400エラーが返ること() throws Exception {
-    String response = mockMvc.perform(MockMvcRequestBuilders.patch("/fields/2")
+  void フィールド更新時に不正な値で400エラーが返ること(String fieldName, String dateOfUse, String expectedField, String expectedMessage) throws Exception {
+    String response = mockMvc.perform(MockMvcRequestBuilders.patch("/fields/1")
             .contentType("application/json")
             .content("""
-                                {
-                                    "fieldName": "",
-                                    "dateOfUse": null
-                                }
-                                """))
-        .andExpect(status().isBadRequest())
+            {
+                "fieldName": "%s",
+                "dateOfUse": "%s"
+            }
+        """.formatted(
+                null == fieldName ? "" : fieldName,
+                null == dateOfUse ? "" : dateOfUse
+            )))
+        .andExpect(MockMvcResultMatchers.status().isBadRequest())
         .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
     JSONAssert.assertEquals("""
-                {
-                    "status": "BAD_REQUEST",
-                    "message": "validation error",
-                    "errors": [
-                        {
-                            "field": "fieldName",
-                            "message": "必須項目です"
-                        },
-                        {
-                            "field": "dateOfUse",
-                            "message": "必須項目です"
-                        }
-                    ]
-                }
-                """, response, true);
+        {
+             "status": "BAD_REQUEST",
+             "message": "validation error",
+             "errors": [
+                 {
+                     "field": "%s",
+                     "message": "%s"
+                 }
+             ]
+         }
+    """.formatted(expectedField, expectedMessage), response, true);
   }
 }

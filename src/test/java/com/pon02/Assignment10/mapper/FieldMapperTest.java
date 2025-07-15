@@ -147,4 +147,15 @@ class FieldMapperTest {
             updatedField
         ));
   }
+
+  @Test
+  @DataSet(value = "datasets/fields/fields.yml")
+  @Transactional
+  void フィールドが削除されること() {
+    fieldMapper.deleteField(1);
+    List<Field> fields = fieldMapper.findAllFields();
+    assertThat(fields)
+        .hasSize(1)
+        .isEqualTo(List.of(new Field(2, "2025/01/29PM", LocalDate.of(2025, 1, 29), LocalDateTime.of(2025, 1, 29, 9, 0, 0))));
+  }
 }

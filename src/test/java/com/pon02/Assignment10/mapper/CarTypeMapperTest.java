@@ -124,4 +124,15 @@ class CarTypeMapperTest {
                         new CarType(2, "ハコバン7人乗り", 7)
                 );
     }
+
+    @Test
+    @DataSet(value = "datasets/car_types/car_types.yml")
+    @Transactional
+    void カータイプが削除されること() {
+        carTypeMapper.deleteCarType(1);
+        List<CarType> carTypes = carTypeMapper.findAllCarTypes();
+        assertThat(carTypes)
+                .hasSize(1)
+                .contains(new CarType(2, "ハコバン7人乗り", 7));
+    }
 }

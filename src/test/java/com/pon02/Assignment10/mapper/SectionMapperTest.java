@@ -120,4 +120,15 @@ class SectionMapperTest {
             new Section(2, "音響")
         );
   }
+
+  @Test
+  @DataSet(value = "datasets/sections/sections.yml")
+  @Transactional
+  void セクションが削除されること() {
+    sectionMapper.deleteSection(1);
+    List<Section> sections = sectionMapper.findAllSections();
+    assertThat(sections)
+        .hasSize(1)
+        .contains(new Section(2, "音響"));
+  }
 }

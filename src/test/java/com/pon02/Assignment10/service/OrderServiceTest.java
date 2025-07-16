@@ -85,4 +85,16 @@ class OrderServiceTest {
         verify(orderMapper, times(1)).findOrderById(1,1);
         verify(orderMapper, times(1)).updateOrder(updatedOrder,1);
     }
+
+    @Test
+    public void オーダーが正しく1件削除されること() {
+        Order existingOrder = new Order(1, 1,1, 1, LocalDateTime.of(2024, 5, 2, 9, 0, 0),
+            null);
+        doReturn(Optional.of(existingOrder)).when(orderMapper).findOrderById(1,1);
+        doNothing().when(orderMapper).deleteOrder(1,1);
+        orderService.deleteOrder(1,1);
+
+        verify(orderMapper, times(1)).findOrderById(1,1);
+        verify(orderMapper, times(1)).deleteOrder(1,1);
+    }
 }

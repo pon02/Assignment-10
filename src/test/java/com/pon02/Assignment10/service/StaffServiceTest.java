@@ -88,4 +88,15 @@ class StaffServiceTest {
     verify(staffMapper, times(1)).findStaffById(1, 1);
     verify(staffMapper, times(1)).updateStaff(updatedStaff, 1);
   }
+
+  @Test
+  void スタッフが正しく1件削除されること() {
+    Staff existingStaff = new Staff(1, 1, 1, 1, LocalDateTime.of(2024, 7, 10, 9, 0, 0), null);
+    doReturn(Optional.of(existingStaff)).when(staffMapper).findStaffById(1, 1);
+    doNothing().when(staffMapper).deleteStaff(1, 1);
+    staffService.deleteStaff(1, 1);
+
+    verify(staffMapper, times(1)).findStaffById(1, 1);
+    verify(staffMapper, times(1)).deleteStaff(1, 1);
+  }
 }

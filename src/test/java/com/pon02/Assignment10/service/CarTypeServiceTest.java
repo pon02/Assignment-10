@@ -3,6 +3,7 @@ package com.pon02.Assignment10.service;
 import com.pon02.Assignment10.entity.CarType;
 import com.pon02.Assignment10.exception.CarTypeNotFoundException;
 import com.pon02.Assignment10.mapper.CarTypeMapper;
+import com.pon02.Assignment10.mapper.OrderMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,6 +25,9 @@ class CarTypeServiceTest {
 
     @Mock
     private CarTypeMapper carTypeMapper;
+
+    @Mock
+    private OrderMapper orderMapper;
 
     @Test
     public void 全てのカータイプを取得できる() {
@@ -98,5 +102,15 @@ class CarTypeServiceTest {
 
         verify(carTypeMapper, times(1)).findCarTypeById(1);
         verify(carTypeMapper, times(1)).updateCarType(updatedCarType);
+    }
+
+    @Test
+    public void カータイプが正しく1件削除されること() {
+        CarType existingCarType = new CarType(1, "セダン4人", 4);
+        doReturn(Optional.of(existingCarType)).when(carTypeMapper).findCarTypeById(1);
+        doNothing().when(carTypeMapper).deleteCarType(1);
+        carTypeService.deleteCarType(1);
+        verify(carTypeMapper, times(1)).findCarTypeById(1);
+        verify(carTypeMapper, times(1)).deleteCarType(1);
     }
 }

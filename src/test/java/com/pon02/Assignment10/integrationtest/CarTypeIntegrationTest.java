@@ -323,4 +323,55 @@ public class CarTypeIntegrationTest {
                  }
                 """, response, true);
     }
+
+    // DELETEメソッドで指定したIDのカータイプを削除しステータスコード204が返されること
+    @Test
+    @DataSet(value = "datasets/car_types/car_types.yml")
+    @ExpectedDataSet(value = "datasets/car_types/delete_car_type.yml")
+    @Transactional
+    void 指定したIDのカータイプが削除できること() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/car-types/2"))
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
+    // DELETEメソッドで存在しないIDを指定した時に、例外がスローされステータスコード404とエラーメッセージが返されること
+    @Test
+    @DataSet(value = "datasets/car_types/car_types.yml")
+    @Transactional
+    void 存在しないIDのカータイプを削除しようとすると404エラーが返されること() throws Exception {
+        String response = mockMvc.perform(MockMvcRequestBuilders.delete("/car-types/100"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        JSONAssert.assertEquals("""
+                {
+                     "message": "Car type not found for id: 100",
+                     "error": "Not Found",
+                     "timestamp": "2024-08-17T16:28:02.663990+09:00[Asia/Tokyo]",
+                     "path": "/car-types/100",
+                     "status": "404"
+                 }
+                """, response, new CustomComparator(JSONCompareMode.STRICT,
+                new Customization("timestamp", ((o1, o2) -> true))));
+    }
+
+    //DELETEメソッドでカータイプを削除しようとした時に、カータイプがすでに使用されている場合、
+    // 例外がスローされ400エラーとメッセージが返されること
+    @Test
+    @DataSet(value = {"datasets/car_types/car_types.yml", "datasets/orders/orders.yml"})
+    @Transactional
+    void カータイプが使用履歴がある場合に削除しようとすると400エラーが返されること() throws Exception {
+        String response = mockMvc.perform(MockMvcRequestBuilders.delete("/car-types/1"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        JSONAssert.assertEquals("""
+                {
+                     "message": "Car type with id 1 is in use and cannot be deleted",
+                     "error": "Bad Request",
+                     "timestamp": "2024-08-17T16:28:02.663990+09:00[Asia/Tokyo]",
+                     "path": "/car-types/1",
+                     "status": "400"
+                 }
+                """, response, new CustomComparator(JSONCompareMode.STRICT,
+                new Customization("timestamp", ((o1, o2) -> true))));
+    }
 }

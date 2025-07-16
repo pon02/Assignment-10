@@ -327,4 +327,35 @@ public class FieldIntegrationTest {
          }
     """.formatted(expectedField, expectedMessage), response, true);
   }
+
+  // DELETE: フィールドが削除できること
+  @Test
+  @DataSet(value = "datasets/fields/fields.yml")
+  @ExpectedDataSet(value = "datasets/fields/delete_field.yml")
+  @Transactional
+  void フィールドが削除できること() throws Exception {
+    mockMvc.perform(MockMvcRequestBuilders.delete("/fields/2"))
+            .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  // DELETE: 存在しないフィールドIDで404が返ること
+  @Test
+  @DataSet(value = "datasets/fields/fields.yml")
+  @Transactional
+  void 存在しないフィールドIDで404エラーが返ること() throws Exception {
+    String response = mockMvc.perform(MockMvcRequestBuilders.delete("/fields/999"))
+        .andExpect(MockMvcResultMatchers.status().isNotFound())
+        .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+    JSONAssert.assertEquals("""
+                {
+                    "message": "Field not found for id: 999",
+                    "error": "Not Found",
+                    "timestamp": "2024-08-17T16:42:47.123237+09:00[Asia/Tokyo]",
+                    "path": "/fields/999",
+                    "status": "404"
+                }
+                """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("timestamp", (o1, o2) -> true)));
+  }
 }

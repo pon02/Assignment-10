@@ -53,7 +53,7 @@ public class SectionService {
               .orElseThrow(() -> new SectionNotFoundException("Section not found for id: " + id));
           boolean isUsedInStaffs = staffMapper.existsBySectionId(id);
           if (isUsedInStaffs) {
-              throw new IllegalStateException("Cannot delete Section with existing orders");
+              throw new IllegalStateException("Section with id " + id + " is in use and cannot be deleted");
           }
           sectionMapper.deleteSection(id);
       }

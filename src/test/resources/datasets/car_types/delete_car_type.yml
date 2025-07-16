@@ -1,0 +1,4 @@
+car_types:
+  - id: 1
+    car_type: セダン4人乗り
+    capacity: 4

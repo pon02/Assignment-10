@@ -68,8 +68,7 @@ public class FieldController {
   @DeleteMapping("/fields/{id}")
   public ResponseEntity<Response> delete(@PathVariable Integer id) {
     fieldService.deleteField(id);
-    Response body = new Response("Field deleted");
-    return ResponseEntity.ok(body);
+    return ResponseEntity.noContent().build();
   }
 
 }

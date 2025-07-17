@@ -236,7 +236,56 @@ public class SectionIntegrationTest {
                        "message": "%s" } ]
             }
             """.formatted(msg), response, true);
+  }
 
+  // DELETEメソッドで指定したIDのセクションを削除しステータスコード204が返されること
+  @Test
+  @DataSet("datasets/sections/sections.yml")
+  @ExpectedDataSet("datasets/sections/delete_section.yml")
+  @Transactional
+  void セクションが削除できること() throws Exception {
+    mockMvc.perform(delete("/sections/2"))
+        .andExpect(status().isNoContent());
+  }
 
+  // DELETEメソッドで存在しないIDを指定した時に、例外がスローされステータスコード404とエラーメッセージが返されること
+  @Test
+  @DataSet("datasets/sections/sections.yml")
+  @Transactional
+  void 存在しないIDのセクションを削除しようとすると404エラーが返ること() throws Exception {
+    String response = mockMvc.perform(delete("/sections/999"))
+        .andExpect(status().isNotFound())
+        .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+    JSONAssert.assertEquals("""
+            {
+              "message": "Section not found for id: 999",
+              "error": "Not Found",
+              "timestamp": "2024-08-17T16:42:47.123237+09:00[Asia/Tokyo]",
+              "path": "/sections/999",
+              "status": "404"
+            }
+            """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("timestamp", (o1, o2) -> true)));
+  }
+
+  //DELETEメソッドでセクションを削除しようとした時に、セクションがすでに使用されている場合、
+  // 例外がスローされ400エラーとメッセージが返されること
+  @Test
+  @DataSet(value = {"datasets/sections/sections.yml", "datasets/staffs/staffs.yml"})
+  @Transactional
+  void セクションが使用履歴がある場合に削除しようとすると400エラーが返されること() throws Exception {
+    String response = mockMvc.perform(delete("/sections/1"))
+        .andExpect(status().isBadRequest())
+        .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+    JSONAssert.assertEquals("""
+            {
+              "message": "Section with id 1 is in use and cannot be deleted",
+              "error": "Bad Request",
+              "timestamp": "2024-08-17T16:42:47.123237+09:00[Asia/Tokyo]",
+              "path": "/sections/1",
+              "status": "400"
+            }
+            """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("timestamp", (o1, o2) -> true)));
   }
 }

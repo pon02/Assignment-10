@@ -113,4 +113,16 @@ class OrderMapperTest {
                 new Order(1, 1,1, 2, LocalDateTime.of(2024, 5, 2, 9, 0, 0), LocalDateTime.of(2024, 5, 2, 9, 5, 0)),
                 updatedOrder));
     }
+
+    @Test
+    @DataSet(value = "datasets/orders/orders.yml")
+    @Transactional
+    void オーダーが削除されること() {
+        orderMapper.deleteOrder(1, 2);
+        List<Order> orders = orderMapper.findAllOrders(1);
+        assertThat(orders)
+                .hasSize(1)
+                .contains(new Order(1, 1,1, 2, LocalDateTime.of(2024, 5, 2, 9, 0, 0),
+                        LocalDateTime.of(2024, 5, 2, 9, 5, 0)));
+    }
 }

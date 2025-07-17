@@ -57,7 +57,6 @@ public class StaffController {
     @DeleteMapping("/{staffId}")
     public ResponseEntity<Response> delete(@PathVariable Integer fieldId, @PathVariable Integer staffId) {
         staffService.deleteStaff(fieldId, staffId);
-        Response body = new Response("Staff deleted");
-        return ResponseEntity.ok(body);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -214,4 +214,32 @@ public class StaffIntegrationTest {
                  }
                 """, response, true);
   }
+
+  @Test
+  @DataSet(value = {"datasets/fields/fields.yml", "datasets/staffs/staffs.yml"})
+  @ExpectedDataSet(value = "datasets/staffs/delete_staff.yml")
+  @Transactional
+  void スタッフが削除できること() throws Exception {
+    mockMvc.perform(MockMvcRequestBuilders.delete("/fields/1/staffs/2"))
+            .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @DataSet(value = {"datasets/fields/fields.yml", "datasets/staffs/staffs.yml"})
+  @Transactional
+  void 存在しないIDのスタッフを削除しようとした場合404エラーが返されること() throws Exception {
+    String response = mockMvc.perform(MockMvcRequestBuilders.delete("/fields/1/staffs/100"))
+        .andExpect(MockMvcResultMatchers.status().isNotFound())
+        .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+    JSONAssert.assertEquals("""
+                {
+                     "message": "Staff not found for fieldId: 1, staffId: 100",
+                     "error": "Not Found",
+                     "timestamp": "2025-07-10T12:00:00.000+09:00[Asia/Tokyo]",
+                     "path": "/fields/1/staffs/100",
+                     "status": "404"
+                 }
+                """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("timestamp", ((o1, o2) -> true))));
+  }
 }

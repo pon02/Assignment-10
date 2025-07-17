@@ -147,4 +147,16 @@ class FieldServiceTest {
     verify(fieldMapper, times(1)).findFieldById(2);
     verify(fieldMapper, times(1)).updateField(updated);
   }
+
+  @Test
+  void フィールドが正しく1件削除されること() {
+    Field existing = new Field(2, "2025/01/29PM", LocalDate.of(2025, 1, 29), LocalDateTime.of(2025, 1, 28, 10, 0, 0));
+    doReturn(Optional.of(existing)).when(fieldMapper).findFieldById(2);
+    doNothing().when(fieldMapper).deleteField(2);
+
+    fieldService.deleteField(2);
+
+    verify(fieldMapper, times(1)).findFieldById(2);
+    verify(fieldMapper, times(1)).deleteField(2);
+  }
 }

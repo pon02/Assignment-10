@@ -62,8 +62,7 @@ public class SectionController {
     @DeleteMapping("/sections/{id}")
     public ResponseEntity<Response> delete(@PathVariable Integer id) {
         sectionService.deleteSection(id);
-        Response body = new Response("Section deleted");
-        return ResponseEntity.ok(body);
+        return ResponseEntity.noContent().build();
     }
 
 }

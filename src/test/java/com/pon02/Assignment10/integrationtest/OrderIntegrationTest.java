@@ -224,4 +224,60 @@ public class OrderIntegrationTest {
                  }
                 """, response, true);
     }
+
+    //PATCHメソッドで存在しないIDを指定した場合、例外がスローされステータスコード404とエラーメッセージが返されること
+    @Test
+    @DataSet(value = {"datasets/fields/fields.yml", "datasets/orders/orders.yml"})
+    @Transactional
+    void 存在しないIDのオーダーを更新しようとした場合404エラーが返されること() throws Exception {
+        String response = mockMvc.perform(MockMvcRequestBuilders.patch("/fields/1/orders/100")
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                    "orderStatusId": 2
+                                }
+                                """))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        JSONAssert.assertEquals("""
+                {
+                     "message": "Order not found for fieldId: 1 and orderId: 100",
+                     "error": "Not Found",
+                     "timestamp": "2024-08-17T16:42:47.123237+09:00[Asia/Tokyo]",
+                     "path": "/fields/1/orders/100",
+                     "status": "404"
+                 }
+                """, response, new CustomComparator(JSONCompareMode.STRICT,
+            new Customization("timestamp", ((o1, o2) -> true))));
+    }
+
+    //DELETEメソッドで正しくリクエストした時に、オーダーが削除できステータスコード204が返されること
+    @Test
+    @DataSet(value = {"datasets/fields/fields.yml", "datasets/orders/orders.yml"})
+    @ExpectedDataSet(value = "datasets/orders/delete_order.yml")
+    @Transactional
+    void オーダーが削除できること() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/fields/1/orders/2"))
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
+    //DELETEメソッドで存在しないIDを指定した場合、例外がスローされステータスコード404とエラーメッセージが返されること
+    @Test
+    @DataSet(value = {"datasets/fields/fields.yml", "datasets/orders/orders.yml"})
+    @Transactional
+    void 存在しないIDのオーダーを削除しようとした場合404エラーが返されること() throws Exception {
+        String response = mockMvc.perform(MockMvcRequestBuilders.delete("/fields/1/orders/100"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        JSONAssert.assertEquals("""
+                {
+                     "message": "Order not found for fieldId: 1 and orderId: 100",
+                     "error": "Not Found",
+                     "timestamp": "2024-08-17T16:42:47.123237+09:00[Asia/Tokyo]",
+                     "path": "/fields/1/orders/100",
+                     "status": "404"
+                 }
+                """, response, new CustomComparator(JSONCompareMode.STRICT,
+            new Customization("timestamp", ((o1, o2) -> true))));
+    }
 }

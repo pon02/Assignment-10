@@ -113,4 +113,15 @@ class StaffMapperTest {
             updatedStaff
         ));
   }
+
+  @Test
+  @DataSet(value = "datasets/staffs/staffs.yml")
+  @Transactional
+  void スタッフが削除されること() {
+    staffMapper.deleteStaff(1, 1);
+    List<Staff> staffs = staffMapper.findAllStaffs(1);
+    assertThat(staffs)
+        .hasSize(1)
+        .isEqualTo(List.of(new Staff(2, 1, 2, 1, LocalDateTime.of(2024, 5, 2, 9, 2, 0), null)));
+  }
 }

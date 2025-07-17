@@ -3,6 +3,7 @@ package com.pon02.Assignment10.service;
 import com.pon02.Assignment10.entity.Section;
 import com.pon02.Assignment10.exception.SectionNotFoundException;
 import com.pon02.Assignment10.mapper.SectionMapper;
+import com.pon02.Assignment10.mapper.StaffMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,6 +25,9 @@ class SectionServiceTest {
 
   @Mock
   private SectionMapper sectionMapper;
+
+  @Mock
+  private StaffMapper staffMapper;
 
   @Test
   public void 全てのセクションを取得できる() {
@@ -112,5 +116,16 @@ class SectionServiceTest {
 
     verify(sectionMapper, times(1)).findSectionById(1);
     verify(sectionMapper, times(1)).updateSection(updatedSection);
+  }
+
+  @Test
+  public void セクションが正しく1件削除されること() {
+    Section existingSection = new Section(1, "大道具");
+    doReturn(Optional.of(existingSection)).when(sectionMapper).findSectionById(1);
+    doNothing().when(sectionMapper).deleteSection(1);
+    sectionService.deleteSection(1);
+
+    verify(sectionMapper, times(1)).findSectionById(1);
+    verify(sectionMapper, times(1)).deleteSection(1);
   }
 }

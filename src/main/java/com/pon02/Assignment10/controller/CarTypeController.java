@@ -56,7 +56,6 @@ public class CarTypeController {
     @DeleteMapping("/car-types/{id}")
     public ResponseEntity<Response> delete(@PathVariable Integer id) {
         carTypeService.deleteCarType(id);
-        Response body = new Response("CarType deleted");
-        return ResponseEntity.ok(body);
+        return ResponseEntity.noContent().build();
     }
 }

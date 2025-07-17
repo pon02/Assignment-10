@@ -54,7 +54,7 @@ public class CarTypeService {
             .orElseThrow(() -> new CarTypeNotFoundException("Car type not found for id: " + id));
         boolean isUsedInOrders = orderMapper.existsByCarTypeId(id);
         if (isUsedInOrders) {
-            throw new IllegalStateException("Cannot delete CarType with existing orders");
+            throw new IllegalStateException("Car type with id " + id + " is in use and cannot be deleted");
         }
         carTypeMapper.deleteCarType(id);
     }

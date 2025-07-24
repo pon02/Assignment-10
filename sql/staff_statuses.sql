@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS staff_statuses;
+
 CREATE TABLE staff_statuses (
   id int unsigned AUTO_INCREMENT,
   staff_status VARCHAR(100) NOT NULL,
